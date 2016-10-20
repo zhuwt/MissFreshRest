@@ -7,47 +7,112 @@ using System.Threading.Tasks;
 using Top.Api;
 using Top.Api.Request;
 using Top.Api.Response;
+using Parse;
+using DTO;
 
 namespace Services
 {
     public class Account
     {
-        static Random seed = new Random();
+        static public bool CanSendCheckCode(string telNo)
+        {
+            MissFreshEntities db = new MissFreshEntities();
+            var customer = db.Customers.SingleOrDefault(p => p.telNo == telNo);
+            if (customer == null)
+            {
+                return true;
+            }
+            else
+            {   
+                if (string.IsNullOrEmpty(customer.password))
+                {
+                    if (customer.codeTime == null || (DateTime.Now - customer.codeTime).Minutes > 1)
+                        return true;
+                    else
+                        return false;//This branch means user send SMS interval less than 1min.
+                }
+                else
+                {   //This branch means the record is legal
+                    //So we cannot send the message and we need notify user change telephone number
+                    return false;
+                }
+            }
+        }
+
         static public bool Exist(string telNo)
         {
             MissFreshEntities db = new MissFreshEntities();
-            var count = db.Customers.Count(p => p.telNo == telNo && p.password != "");
+            var count = db.Customers.Count(p => p.telNo == telNo);
             return count > 0;
         }
 
-        //public void Create(DTO.)
-        //{
-        //    MissFreshEntities db = new MissFreshEntities();
-        //    Models.Customer ct = new Models.Customer();
-        //    ct.id = Guid.NewGuid();
-        //    ct.
-
-
-        //    Models.Account ac = new Models.Account();
-        //    ac.id = Guid.NewGuid();
-        //    ac.UserId = ct.id;
-        //    List<Models.Category> list = db.Categories.ToList();
-        //    return list.ToDTOs();
-        //}
-
-        public static void SendMessage(string telNo)
+        /// <summary>
+        /// Save check code result for create user
+        /// </summary>
+        /// <param name=""></param>
+        public ReturnJasonConstruct<DTO.Account> Create(string telNo)
         {
-            string param = @"{name:'小鲜来了',number:'4575'}";
-            ITopClient client = new DefaultTopClient("https://eco.taobao.com/router/rest", "23482739", "3c5568a65d3b8ff55c68a9cbc42ab898");
-            AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();
-            req.Extend = "";
-            req.SmsType = "normal";
-            req.SmsFreeSignName = "邻客网络";
-            req.SmsParam = param;
-            req.RecNum = telNo;
-            req.SmsTemplateCode = "SMS_18285183";
-            AlibabaAliqinFcSmsNumSendResponse rsp = client.Execute(req);
-            Console.WriteLine(rsp.Body);
+            ReturnJasonConstruct<DTO.Account> obj = new ReturnJasonConstruct<DTO.Account>();
+            try
+            {
+                MissFreshEntities db = new MissFreshEntities();
+
+                Models.Customer ct = new Models.Customer();
+                ct.id = Guid.NewGuid();
+                ct.telNo = telNo;
+                ct.createTime = DateTime.Now;
+                ct.codeTime = DateTime.Now;
+
+                Models.Account ac = new Models.Account();
+                ac.id = Guid.NewGuid();
+                ac.UserId = ct.id;
+
+                db.Accounts.Add(ac);
+                db.SaveChanges();
+
+                obj.status = (int)executeStatus.success;
+                obj.DTOObject = ac.ToDTO();
+
+                return obj;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public ReturnJasonConstruct<DTO.Account> Update(DTO.Account account)
+        {
+            ReturnJasonConstruct<DTO.Account> obj = new ReturnJasonConstruct<DTO.Account>();
+            try
+            {
+                Models.Account acc = account.ToModel();
+                MissFreshEntities db = new MissFreshEntities();
+                var model = db.Accounts.SingleOrDefault(p => p.id == acc.id && p.Customer.id == acc.Customer.id && p.Customer.telNo == acc.Customer.telNo);
+                if (model == null)
+                {
+                    obj.status = (int)executeStatus.warning;
+                    obj.information = "没有用户信息可以更新.";
+                    return obj;
+                }
+                else
+                {
+                    model.Customer.firstName = acc.Customer.firstName;
+                    model.Customer.lastName = acc.Customer.lastName;
+                    model.Customer.email = acc.Customer.email;
+                    model.Customer.password = acc.Customer.password;
+                    model.Customer.codeTime = acc.Customer.codeTime;
+                    db.SaveChanges();
+
+                    obj.status = (int)executeStatus.success;
+                    obj.DTOObject = model.ToDTO();
+                    return obj;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

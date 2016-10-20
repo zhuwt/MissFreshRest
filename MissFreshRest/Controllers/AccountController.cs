@@ -17,9 +17,15 @@ namespace MissFreshRest.Controllers
         [Route("Account/Check")]
         public void Get(string telNo)
         {
-            if (!Services.Account.Exist(telNo))
+            DTO.Account ac = new DTO.Account();
+            
+            if (!Services.Account.CanSendCheckCode(telNo))
             {
-                Services.Account.SendMessage(telNo);
+                int code = SMS.SendMessage(telNo);
+            }
+            else
+            {
+                //account exist cannot send check code，please change to another telephone number.
             }
         }
 
