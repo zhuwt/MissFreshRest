@@ -22,8 +22,8 @@ namespace Models
     
         public int id { get; set; }
         public string category1 { get; set; }
-        public System.DateTime createTime { get; set; }
         public string imageName { get; set; }
+        public System.DateTime createTime { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Good> Goods { get; set; }

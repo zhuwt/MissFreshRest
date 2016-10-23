@@ -24,10 +24,9 @@ namespace Models
         public string firstName { get; set; }
         public string lastName { get; set; }
         public string telNo { get; set; }
+        public string password { get; set; }
         public string email { get; set; }
         public System.DateTime createTime { get; set; }
-        public string password { get; set; }
-        public System.DateTime codeTime { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Account> Accounts { get; set; }

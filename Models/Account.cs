@@ -22,7 +22,9 @@ namespace Models
         }
     
         public System.Guid id { get; set; }
-        public Nullable<System.Guid> UserId { get; set; }
+        public System.Guid userId { get; set; }
+        public string code { get; set; }
+        public Nullable<System.DateTime> codeTime { get; set; }
     
         public virtual Customer Customer { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

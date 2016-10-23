@@ -4,13 +4,15 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="MissFreshModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="MissFreshModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Accounts">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="UserId" Type="uniqueidentifier" />
+          <Property Name="userId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="code" Type="nvarchar" MaxLength="6" />
+          <Property Name="codeTime" Type="datetime" />
         </EntityType>
         <EntityType Name="Addresses">
           <Key>
@@ -40,9 +42,8 @@
           <Property Name="firstName" Type="nvarchar" MaxLength="20" />
           <Property Name="lastName" Type="nvarchar" MaxLength="20" />
           <Property Name="telNo" Type="nvarchar" MaxLength="20" Nullable="false" />
-          <Property Name="password" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="password" Type="nvarchar" MaxLength="20" />
           <Property Name="email" Type="nvarchar" MaxLength="100" />
-          <Property Name="codeTime" Type="datetime" Nullable="false" />
           <Property Name="createTime" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Goods">
@@ -118,14 +119,14 @@
           <Property Name="createTime" Type="datetime" Nullable="false" />
         </EntityType>
         <Association Name="FK_Accounts_Customers">
-          <End Role="Customers" Type="Self.Customers" Multiplicity="0..1" />
+          <End Role="Customers" Type="Self.Customers" Multiplicity="1" />
           <End Role="Accounts" Type="Self.Accounts" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Customers">
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="Accounts">
-              <PropertyRef Name="UserId" />
+              <PropertyRef Name="userId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -274,7 +275,8 @@
             <End Role="OrderDetail" EntitySet="OrderDetail" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="MissFreshModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -283,7 +285,9 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Guid" Nullable="false" />
-          <Property Name="UserId" Type="Guid" />
+          <Property Name="userId" Type="Guid" Nullable="false" />
+          <Property Name="code" Type="String" MaxLength="6" FixedLength="false" Unicode="true" />
+          <Property Name="codeTime" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Customer" Relationship="Self.FK_Accounts_Customers" FromRole="Accounts" ToRole="Customers" />
           <NavigationProperty Name="Addresses" Relationship="Self.FK_Address_Accounts" FromRole="Accounts" ToRole="Addresses" />
           <NavigationProperty Name="Orders" Relationship="Self.FK_order_Accounts" FromRole="Accounts" ToRole="Orders" />
@@ -307,9 +311,9 @@
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="category1" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="imageName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="createTime" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Goods" Relationship="Self.FK_Goods_Classification" FromRole="Category" ToRole="Goods" />
-          <Property Name="imageName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Customer">
           <Key>
@@ -319,11 +323,10 @@
           <Property Name="firstName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="lastName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="telNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="createTime" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Accounts" Relationship="Self.FK_Accounts_Customers" FromRole="Customers" ToRole="Accounts" />
-          <Property Name="password" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="codeTime" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
         <EntityType Name="Good">
           <Key>
@@ -409,14 +412,14 @@
           <NavigationProperty Name="Goods" Relationship="Self.FK_Goods_Units" FromRole="Units" ToRole="Goods" />
         </EntityType>
         <Association Name="FK_Accounts_Customers">
-          <End Role="Customers" Type="Self.Customer" Multiplicity="0..1" />
+          <End Role="Customers" Type="Self.Customer" Multiplicity="1" />
           <End Role="Accounts" Type="Self.Account" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Customers">
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="Accounts">
-              <PropertyRef Name="UserId" />
+              <PropertyRef Name="userId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -575,7 +578,9 @@
             <EntityTypeMapping TypeName="MissFreshModel.Account">
               <MappingFragment StoreEntitySet="Accounts">
                 <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="code" ColumnName="code" />
+                <ScalarProperty Name="codeTime" ColumnName="codeTime" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -594,9 +599,9 @@
           <EntitySetMapping Name="Categories">
             <EntityTypeMapping TypeName="MissFreshModel.Category">
               <MappingFragment StoreEntitySet="Category">
-                <ScalarProperty Name="imageName" ColumnName="imageName" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="category1" ColumnName="category" />
+                <ScalarProperty Name="imageName" ColumnName="imageName" />
                 <ScalarProperty Name="createTime" ColumnName="createTime" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -604,12 +609,11 @@
           <EntitySetMapping Name="Customers">
             <EntityTypeMapping TypeName="MissFreshModel.Customer">
               <MappingFragment StoreEntitySet="Customers">
-                <ScalarProperty Name="codeTime" ColumnName="codeTime" />
-                <ScalarProperty Name="password" ColumnName="password" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="firstName" ColumnName="firstName" />
                 <ScalarProperty Name="lastName" ColumnName="lastName" />
                 <ScalarProperty Name="telNo" ColumnName="telNo" />
+                <ScalarProperty Name="password" ColumnName="password" />
                 <ScalarProperty Name="email" ColumnName="email" />
                 <ScalarProperty Name="createTime" ColumnName="createTime" />
               </MappingFragment>

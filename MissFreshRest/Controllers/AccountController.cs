@@ -1,4 +1,5 @@
-﻿using Services;
+﻿using DTO;
+using Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,24 +16,36 @@ namespace MissFreshRest.Controllers
         // GET: api/Account
         [HttpGet]
         [Route("Account/Check")]
-        public void Get(string telNo)
+        public ReturnJasonConstruct<DTO.Account> Get(string telNo)
         {
             DTO.Account ac = new DTO.Account();
-            
-            if (!Services.Account.CanSendCheckCode(telNo))
+            ReturnJasonConstruct<DTO.Account> obj = new ReturnJasonConstruct<DTO.Account>();
+            if (Services.Account.CanSendCheckCode(telNo))
             {
                 int code = SMS.SendMessage(telNo);
+                Console.WriteLine("******Code is:" + code.ToString());
+                if (!Services.Account.Exist(telNo))
+                    return Services.Account.Create(telNo, code);
+                else
+                {
+                    return Services.Account.Update(telNo, code);
+                }
             }
             else
             {
+                obj.status = (int)executeStatus.warning;
+                obj.information = "验证码每一分钟只能发送一次，请稍后再试.";
+                return obj;
                 //account exist cannot send check code，please change to another telephone number.
             }
         }
 
         // GET: api/Account/5
-        public string Get(int id)
+        [HttpGet]
+        [Route("Account")]
+        public bool Get(string telNo,string password)
         {
-            return "Get";
+            return Services.Account.Exist(telNo, password);
         }
 
         // POST: api/Account
@@ -42,9 +55,20 @@ namespace MissFreshRest.Controllers
         }
 
         // PUT: api/Account/5
-        public string Put(int id, [FromBody]string value)
+        [HttpPut]
+        [Route("Account")]
+        public ReturnJasonConstruct<DTO.Account> Put([FromBody]DTO.Account dto)
         {
-            return "put";
+            ReturnJasonConstruct<DTO.Account> obj = new ReturnJasonConstruct<DTO.Account>();
+            if (!Services.Account.Exist(dto.customer.telNo))
+            {
+                obj.SetWarningInformation("新建用户失败.");
+                return obj;
+            }
+            else
+            {
+                return Services.Account.Update(dto);
+            }
         }
 
         // DELETE: api/Account/5

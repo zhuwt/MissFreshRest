@@ -67,16 +67,32 @@ namespace Parse
         }
         public static DTO.Account ToDTO(this Models.Account model)
         {
-            var account = model.ParseObject<Models.Account, DTO.Account>();
+            //var account = model.ParseObject<Models.Account, DTO.Account>();
             var customer = model.Customer.ToDTO();
-            account.customer = customer;
+            var account = new DTO.Account
+            {
+                id = model.id,
+                userId = model.Customer.id,
+                code = model.code,
+                codeTime = model.codeTime,
+                customer = customer
+            };
+            //account.customer = customer;
             return account;
         }
         public static Models.Account ToModel(this DTO.Account DTOObject)
         {
-            var account = DTOObject.ParseObject<DTO.Account, Models.Account>();
+            //var account = DTOObject.ParseObject<DTO.Account, Models.Account>();
             var customer = DTOObject.customer.ToModel();
-            account.Customer = customer;
+            var account = new Models.Account
+            {
+                id = DTOObject.id,
+                userId = customer.id,
+                code = DTOObject.code,
+                codeTime = DTOObject.codeTime,
+                Customer = customer
+            };
+            //account.Customer = customer;
             return account;
         }
         #endregion

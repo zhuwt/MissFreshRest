@@ -17,25 +17,18 @@ namespace Services
         static public bool CanSendCheckCode(string telNo)
         {
             MissFreshEntities db = new MissFreshEntities();
-            var customer = db.Customers.SingleOrDefault(p => p.telNo == telNo);
-            if (customer == null)
+            var result = db.Accounts.AsQueryable().Where(p => p.Customer.telNo == telNo);
+            if (result == null || result.Count() == 0)
             {
                 return true;
             }
             else
-            {   
-                if (string.IsNullOrEmpty(customer.password))
-                {
-                    if (customer.codeTime == null || (DateTime.Now - customer.codeTime).Minutes > 1)
-                        return true;
-                    else
-                        return false;//This branch means user send SMS interval less than 1min.
-                }
+            {
+                var obj = result.ToList()[0];
+                if (obj.codeTime == null || (DateTime.Now - obj.codeTime).Value.Minutes > 1)
+                    return true;
                 else
-                {   //This branch means the record is legal
-                    //So we cannot send the message and we need notify user change telephone number
-                    return false;
-                }
+                    return false;//This branch means user send SMS interval less than 1min.
             }
         }
 
@@ -46,11 +39,18 @@ namespace Services
             return count > 0;
         }
 
+        static public bool Exist(string telNo,string password)
+        {
+            MissFreshEntities db = new MissFreshEntities();
+            var count = db.Customers.Count(p => p.telNo == telNo && p.password == password);
+            return count > 0;
+        }
+
         /// <summary>
         /// Save check code result for create user
         /// </summary>
         /// <param name=""></param>
-        public ReturnJasonConstruct<DTO.Account> Create(string telNo)
+        static public ReturnJasonConstruct<DTO.Account> Create(string telNo,int code)
         {
             ReturnJasonConstruct<DTO.Account> obj = new ReturnJasonConstruct<DTO.Account>();
             try
@@ -61,12 +61,13 @@ namespace Services
                 ct.id = Guid.NewGuid();
                 ct.telNo = telNo;
                 ct.createTime = DateTime.Now;
-                ct.codeTime = DateTime.Now;
 
                 Models.Account ac = new Models.Account();
                 ac.id = Guid.NewGuid();
-                ac.UserId = ct.id;
+                ac.code = code.ToString();
+                ac.userId = ct.id;
 
+                db.Customers.Add(ct);
                 db.Accounts.Add(ac);
                 db.SaveChanges();
 
@@ -81,31 +82,65 @@ namespace Services
             }
         }
 
-        public ReturnJasonConstruct<DTO.Account> Update(DTO.Account account)
+        public static ReturnJasonConstruct<DTO.Account> Update(string telNo, int code)
+        {
+            ReturnJasonConstruct<DTO.Account> obj = new ReturnJasonConstruct<DTO.Account>();
+            try
+            {
+                MissFreshEntities db = new MissFreshEntities();
+                var model = db.Accounts.SingleOrDefault(p => p.Customer.telNo == telNo);
+                if (model == null)
+                {
+                    obj.status = (int)executeStatus.warning;
+                    obj.information = "创建用户失败.";
+                    return obj;
+                }
+                else
+                {
+                    model.code = code.ToString();
+                    db.SaveChanges();
+
+                    obj.SetDTOObject(model.ToDTO());
+                    obj.status = (int)executeStatus.success;
+                    obj.DTOObject = model.ToDTO();
+                    return obj;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static ReturnJasonConstruct<DTO.Account> Update(DTO.Account account)
         {
             ReturnJasonConstruct<DTO.Account> obj = new ReturnJasonConstruct<DTO.Account>();
             try
             {
                 Models.Account acc = account.ToModel();
                 MissFreshEntities db = new MissFreshEntities();
-                var model = db.Accounts.SingleOrDefault(p => p.id == acc.id && p.Customer.id == acc.Customer.id && p.Customer.telNo == acc.Customer.telNo);
+                var model = db.Accounts.SingleOrDefault(p =>p.Customer.telNo == acc.Customer.telNo);
                 if (model == null)
                 {
-                    obj.status = (int)executeStatus.warning;
-                    obj.information = "没有用户信息可以更新.";
+                    obj.SetWarningInformation("查找用户失败.");
                     return obj;
                 }
                 else
                 {
-                    model.Customer.firstName = acc.Customer.firstName;
-                    model.Customer.lastName = acc.Customer.lastName;
-                    model.Customer.email = acc.Customer.email;
-                    model.Customer.password = acc.Customer.password;
-                    model.Customer.codeTime = acc.Customer.codeTime;
-                    db.SaveChanges();
-
-                    obj.status = (int)executeStatus.success;
-                    obj.DTOObject = model.ToDTO();
+                    if (model.code == acc.code)
+                    {
+                        model.code = SMS.GetRandomCode().ToString();
+                        model.Customer.firstName = acc.Customer.firstName;
+                        model.Customer.lastName = acc.Customer.lastName;
+                        model.Customer.email = acc.Customer.email;
+                        model.Customer.password = acc.Customer.password;
+                        db.SaveChanges();
+                        obj.SetDTOObject(model.ToDTO());
+                    }
+                    else
+                    {
+                        obj.SetWarningInformation("验证码输入错误,请重新输入.");
+                    }
                     return obj;
                 }
             }

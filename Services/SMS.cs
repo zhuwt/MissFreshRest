@@ -19,7 +19,8 @@ namespace Services
         static int maxCode = 999999;
         public static int SendMessage(string telNo)
         {
-            int code = rd.Next(minCode, maxCode);
+            return GetRandomCode();
+            int code = GetRandomCode();
             string param = string.Format("{name:'小鲜来了',number:'{0}'}", code);
             //string param = @"{name:'小鲜来了',number:'4575'}";
             ITopClient client = new DefaultTopClient("https://eco.taobao.com/router/rest", "23482739", "3c5568a65d3b8ff55c68a9cbc42ab898");
@@ -33,6 +34,11 @@ namespace Services
             AlibabaAliqinFcSmsNumSendResponse rsp = client.Execute(req);
             Console.WriteLine(rsp.Body);
             return code;
+        }
+
+        public static int GetRandomCode()
+        {
+            return rd.Next(minCode, maxCode);
         }
     }
 }

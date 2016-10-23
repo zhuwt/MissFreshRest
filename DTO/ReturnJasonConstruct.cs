@@ -21,4 +21,25 @@ namespace DTO
         public string information;
         public T DTOObject;
     }
+
+    public static class ReturnJasonExternMethod
+    {
+        public static void SetFailedInformation<T>(this ReturnJasonConstruct<T> obj, string failedMessage, T DTOObject)
+        {
+            obj.status = (int)executeStatus.success;
+            obj.information = failedMessage;
+            obj.DTOObject = DTOObject;
+        }
+        public static void SetWarningInformation<T>(this ReturnJasonConstruct<T> obj, string warningMessage)
+        {
+            obj.status = (int)executeStatus.warning;
+            obj.information = warningMessage;
+        }
+
+        public static void SetDTOObject<T>(this ReturnJasonConstruct<T> obj, T DTOObject)
+        {
+            obj.status = (int)executeStatus.success;
+            obj.DTOObject = DTOObject;
+        }
+    }
 }
