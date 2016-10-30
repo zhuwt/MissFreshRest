@@ -20,33 +20,33 @@ namespace MissFreshRest.Controllers
             return Category.GetAllCategory();
         }
 
-        // GET: api/Category/5
-        [HttpGet]
-        [Route("user")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+        //// GET: api/Category/5
+        //[HttpGet]
+        //[Route("user")]
+        //public string Get(int id)
+        //{
+        //    return "value";
+        //}
 
-        // POST: api/Category
-        [HttpPost]
-        [Route("user")]
-        public void Post([FromBody]string value)
-        {
-        }
+        //// POST: api/Category
+        //[HttpPost]
+        //[Route("user")]
+        //public void Post([FromBody]string value)
+        //{
+        //}
 
-        // PUT: api/Category/5
-        [HttpPut]
-        [Route("user")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
+        //// PUT: api/Category/5
+        //[HttpPut]
+        //[Route("user")]
+        //public void Put(int id, [FromBody]string value)
+        //{
+        //}
 
-        // DELETE: api/Category/5
-        [HttpDelete]
-        [Route("user")]
-        public void Delete(int id)
-        {
-        }
+        //// DELETE: api/Category/5
+        //[HttpDelete]
+        //[Route("user")]
+        //public void Delete(int id)
+        //{
+        //}
     }
 }

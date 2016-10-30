@@ -12,9 +12,16 @@ namespace Services
     {
         public static IEnumerable<DTO.Category> GetAllCategory()
         {
-            MissFreshEntities db = new MissFreshEntities();
-            List<Models.Category> list = db.Categories.ToList();
-            return list.ToDTOs();
+            try
+            {
+                MissFreshEntities db = new MissFreshEntities();
+                List<Models.Category> list = db.Categories.ToList();
+                return list.ToDTOs();
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

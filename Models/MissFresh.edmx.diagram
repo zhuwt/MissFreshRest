@@ -4,26 +4,29 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="db91f67ed58841dca649dcc619f860dd" Name="Diagram1">
-        <EntityTypeShape EntityType="MissFreshModel.Account" Width="1.5" PointX="0.75" PointY="9.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="MissFreshModel.Address" Width="1.5" PointX="0.75" PointY="18.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="MissFreshModel.Category" Width="1.5" PointX="0.75" PointY="3.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="MissFreshModel.Customer" Width="1.5" PointX="1.5" PointY="15.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="MissFreshModel.Good" Width="1.5" PointX="3" PointY="2.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="MissFreshModel.GoodsDetail" Width="1.5" PointX="0.75" PointY="6.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="MissFreshModel.Meal" Width="1.5" PointX="2.75" PointY="7.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="MissFreshModel.OrderDetail" Width="1.5" PointX="5.25" PointY="3.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="MissFreshModel.Order" Width="1.5" PointX="3" PointY="10.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="MissFreshModel.sysdiagram" Width="1.5" PointX="5.75" PointY="6.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="MissFreshModel.Unit" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+      <Diagram DiagramId="a8bffcd2cb98441ba66ca887e0ef29b8" Name="Diagram1">
+        <EntityTypeShape EntityType="MissFreshModel.Account" Width="1.5" PointX="3.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MissFreshModel.Address" Width="1.5" PointX="6" PointY="16.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="MissFreshModel.Category" Width="1.5" PointX="0.75" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="MissFreshModel.Customer" Width="1.5" PointX="1.5" PointY="12.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="MissFreshModel.Good" Width="1.5" PointX="3" PointY="2.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MissFreshModel.GoodsDetail" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MissFreshModel.Meal" Width="1.5" PointX="3" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MissFreshModel.MealsDetail" Width="1.5" PointX="5.25" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="MissFreshModel.OrderDetail" Width="1.5" PointX="8.25" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="MissFreshModel.Order" Width="1.5" PointX="6" PointY="12.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="MissFreshModel.sysdiagram" Width="1.5" PointX="5.75" PointY="7.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="MissFreshModel.Unit" Width="1.5" PointX="0.75" PointY="7.25" IsExpanded="true" />
         <AssociationConnector Association="MissFreshModel.FK_Accounts_Customers" ManuallyRouted="false" />
         <AssociationConnector Association="MissFreshModel.FK_Address_Accounts" ManuallyRouted="false" />
         <AssociationConnector Association="MissFreshModel.FK_order_Accounts" ManuallyRouted="false" />
-        <AssociationConnector Association="MissFreshModel.FK_order_Address" ManuallyRouted="false" />
         <AssociationConnector Association="MissFreshModel.FK_Goods_Classification" ManuallyRouted="false" />
         <AssociationConnector Association="MissFreshModel.FK_Goods_GoodsDetail" ManuallyRouted="false" />
         <AssociationConnector Association="MissFreshModel.FK_Goods_Units" ManuallyRouted="false" />
+        <AssociationConnector Association="MissFreshModel.FK_MealsDetail_Goods" ManuallyRouted="false" />
         <AssociationConnector Association="MissFreshModel.FK_OrderDetail_Goods" ManuallyRouted="false" />
+        <AssociationConnector Association="MissFreshModel.FK_MealsDetail_Meals" ManuallyRouted="false" />
+        <AssociationConnector Association="MissFreshModel.FK_OrderDetail_Meals" ManuallyRouted="false" />
         <AssociationConnector Association="MissFreshModel.FK_OrderDetail_order" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>

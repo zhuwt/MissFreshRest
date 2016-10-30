@@ -14,12 +14,15 @@ namespace Models
     
     public partial class OrderDetail
     {
-        public int id { get; set; }
+        public System.Guid id { get; set; }
         public System.Guid orderId { get; set; }
-        public System.Guid goodsId { get; set; }
+        public System.Guid itemsId { get; set; }
         public int count { get; set; }
+        public decimal price { get; set; }
+        public Nullable<byte> evaluate { get; set; }
     
         public virtual Good Good { get; set; }
+        public virtual Meal Meal { get; set; }
         public virtual Order Order { get; set; }
     }
 }

@@ -23,6 +23,7 @@ namespace Parse
             }
             return list;
         }
+
         #region category
         public static DTO.Category ToDTO(this Models.Category model)
         {
@@ -56,6 +57,7 @@ namespace Parse
             return list;
         }
         #endregion
+
         #region account
         public static DTO.Customer ToDTO(this Models.Customer model)
         {
@@ -94,6 +96,146 @@ namespace Parse
             };
             //account.Customer = customer;
             return account;
+        }
+        #endregion
+
+        #region Goods
+        public static DTO.Goods ToDTO(this Models.Good model)
+        {
+            return model.ParseObject<Models.Good, DTO.Goods>();
+        }
+        public static Models.Good ToModel(this DTO.Goods DTOObject)
+        {
+            return DTOObject.ParseObject<DTO.Goods, Models.Good>();
+        }
+        public static IList<DTO.Goods> ToDTOs(this IList<Models.Good> models)
+        {
+            Mapper.Initialize(p => p.CreateMap<Models.GoodsDetail, DTO.GoodsDetail>());
+            List<DTO.Goods> list = new List<DTO.Goods>();
+            foreach (var item in models)
+            {
+                var goods = new DTO.Goods
+                {
+                    id = item.id,
+                    name = item.name,
+                    detailName = item.detailName,
+                    unit = item.Unit1.unit1,
+                    category = item.Category1.category1,
+                    price = item.price,
+                    sellCount = item.sellCount,
+                    limited = item.limited,
+                    imageName = item.imageName,
+                    goodsStatus = item.goodsStatus,
+                    evaluate = item.evaluate,
+                    goodsDetail = null
+                };
+                goods.goodsDetail = item.GoodsDetail.ToDTO();
+                list.Add(goods);
+            }
+            return list;
+        }
+
+        public static IList<Models.Good> ToModels(this IList<DTO.Goods> DTOObjects)
+        {
+            List<Models.Good> list = new List<Models.Good>();
+            foreach (var item in DTOObjects)
+            {
+                list.Add(item.ToModel());
+            }
+            return list;
+        }
+        ////////////GoodsDetail/////////////////////
+        public static DTO.GoodsDetail ToDTO(this Models.GoodsDetail model)
+        {
+            return model.ParseObject<Models.GoodsDetail, DTO.GoodsDetail>();
+        }
+        public static Models.GoodsDetail ToModel(this DTO.GoodsDetail DTOObject)
+        {
+            return DTOObject.ParseObject<DTO.GoodsDetail, Models.GoodsDetail>();
+        }
+        #endregion
+        #region address
+        public static DTO.Address ToDTO(this Models.Address model)
+        {
+            return model.ParseObject<Models.Address, DTO.Address>();
+        }
+        public static Models.Address ToModel(this DTO.Address DTOObject)
+        {
+            return DTOObject.ParseObject<DTO.Address, Models.Address>();
+        }
+        public static IList<DTO.Address> ToDTOs(this IList<Models.Address> models)
+        {
+            List<DTO.Address> list = new List<DTO.Address>();
+            foreach (var item in models)
+            {
+                list.Add(item.ToDTO());
+            }
+            return list;
+        }
+        public static IList<Models.Address> ToModels(this IList<DTO.Address> DTOObjects)
+        {
+            List<Models.Address> list = new List<Models.Address>();
+            foreach (var item in DTOObjects)
+            {
+                list.Add(item.ToModel());
+            }
+            return list;
+        }
+        #endregion
+        #region Meals
+        public static DTO.Meals ToDTO(this Models.Meal model)
+        {
+            return model.ParseObject<Models.Meal, DTO.Meals>();
+        }
+        public static Models.Meal ToModel(this DTO.Meals DTOObject)
+        {
+            return DTOObject.ParseObject<DTO.Meals, Models.Meal>();
+        }
+        public static IList<DTO.Meals> ToDTOs(this IList<Models.Meal> models)
+        {
+            List<DTO.Meals> list = new List<DTO.Meals>();
+            foreach (var item in models)
+            {
+                list.Add(item.ToDTO());
+            }
+            return list;
+        }
+        public static IList<Models.Meal> ToModels(this IList<DTO.Meals> DTOObjects)
+        {
+            List<Models.Meal> list = new List<Models.Meal>();
+            foreach (var item in DTOObjects)
+            {
+                list.Add(item.ToModel());
+            }
+            return list;
+        }
+        #endregion
+        #region Order
+        public static DTO.Order ToDTO(this Models.Order model)
+        {
+            return model.ParseObject<Models.Order, DTO.Order>();
+        }
+        public static Models.Order ToModel(this DTO.Order DTOObject)
+        {
+            return DTOObject.ParseObject<DTO.Order, Models.Order>();
+        }
+        public static IList<DTO.Order> ToDTOs(this IList<Models.Order> models)
+        {
+            List<DTO.Order> list = new List<DTO.Order>();
+            foreach (var item in models)
+            {
+                list.Add(item.ToDTO());
+            }
+            return list;
+        }
+        public static IList<Models.Order> ToModels(this IList<DTO.Order> DTOObjects)
+        {
+            List<Models.Order> list = new List<Models.Order>();
+            foreach (var item in DTOObjects)
+            {
+                list.Add(item.ToModel());
+            }
+            return list;
         }
         #endregion
     }

@@ -12,18 +12,13 @@ namespace Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Address
+    public partial class MealsDetail
     {
         public System.Guid id { get; set; }
-        public System.Guid accountId { get; set; }
-        public string area { get; set; }
-        public string building { get; set; }
-        public int floor { get; set; }
-        public int number { get; set; }
-        public string tel { get; set; }
-        public string name { get; set; }
-        public Nullable<bool> defaultAddress { get; set; }
+        public System.Guid mealsId { get; set; }
+        public System.Guid goodsId { get; set; }
     
-        public virtual Account Account { get; set; }
+        public virtual Good Good { get; set; }
+        public virtual Meal Meal { get; set; }
     }
 }

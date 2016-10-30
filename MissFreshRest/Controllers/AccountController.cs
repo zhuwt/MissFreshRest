@@ -48,11 +48,11 @@ namespace MissFreshRest.Controllers
             return Services.Account.Exist(telNo, password);
         }
 
-        // POST: api/Account
-        public string Post([FromBody]string value)
-        {
-            return "post";
-        }
+        //// POST: api/Account
+        //public string Post([FromBody]string value)
+        //{
+        //    return "post";
+        //}
 
         // PUT: api/Account/5
         [HttpPut]
@@ -71,10 +71,10 @@ namespace MissFreshRest.Controllers
             }
         }
 
-        // DELETE: api/Account/5
-        public string Delete(int id)
-        {
-            return "delete";
-        }
+        //// DELETE: api/Account/5
+        //public string Delete(int id)
+        //{
+        //    return "delete";
+        //}
     }
 }

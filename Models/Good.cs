@@ -17,6 +17,7 @@ namespace Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Good()
         {
+            this.MealsDetails = new HashSet<MealsDetail>();
             this.OrderDetails = new HashSet<OrderDetail>();
         }
     
@@ -25,16 +26,19 @@ namespace Models
         public string detailName { get; set; }
         public int unit { get; set; }
         public int category { get; set; }
-        public double price { get; set; }
-        public Nullable<int> sellCount { get; set; }
-        public Nullable<int> limited { get; set; }
+        public decimal price { get; set; }
+        public int sellCount { get; set; }
+        public int limited { get; set; }
         public string imageName { get; set; }
-        public Nullable<int> goodsStatus { get; set; }
+        public int goodsStatus { get; set; }
+        public Nullable<byte> evaluate { get; set; }
         public Nullable<System.DateTime> createTime { get; set; }
     
         public virtual Category Category1 { get; set; }
         public virtual GoodsDetail GoodsDetail { get; set; }
         public virtual Unit Unit1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<MealsDetail> MealsDetails { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }

@@ -24,13 +24,16 @@ namespace Models
         public long orderNo { get; set; }
         public int orderType { get; set; }
         public int orderState { get; set; }
-        public double orderTotalPrice { get; set; }
+        public decimal totalPrice { get; set; }
+        public int totalCount { get; set; }
         public System.Guid accountId { get; set; }
-        public int receiveAddress { get; set; }
+        public string receiveAddress { get; set; }
+        public string tel { get; set; }
+        public string receivePerson { get; set; }
+        public string imangeName { get; set; }
         public System.DateTime createTime { get; set; }
     
         public virtual Account Account { get; set; }
-        public virtual Address Address { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }

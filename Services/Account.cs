@@ -14,36 +14,73 @@ namespace Services
 {
     public class Account
     {
+        /// <summary>
+        /// Send message to cellphone by indicate
+        /// </summary>
+        /// <param name="telNo">cellphone number</param>
+        /// <returns></returns>
         static public bool CanSendCheckCode(string telNo)
         {
-            MissFreshEntities db = new MissFreshEntities();
-            var result = db.Accounts.AsQueryable().Where(p => p.Customer.telNo == telNo);
-            if (result == null || result.Count() == 0)
+            try
             {
-                return true;
-            }
-            else
-            {
-                var obj = result.ToList()[0];
-                if (obj.codeTime == null || (DateTime.Now - obj.codeTime).Value.Minutes > 1)
+                MissFreshEntities db = new MissFreshEntities();
+                var result = db.Accounts.AsQueryable().Where(p => p.Customer.telNo == telNo);
+                if (result == null || result.Count() == 0)
+                {
                     return true;
+                }
                 else
-                    return false;//This branch means user send SMS interval less than 1min.
+                {
+                    var obj = result.ToList()[0];
+                    if (obj.codeTime == null || (DateTime.Now - obj.codeTime).Value.Minutes > 1)
+                        return true;
+                    else
+                        return false;//This branch means user send SMS interval less than 1min.
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 
+        /// <summary>
+        /// Wether an account exist
+        /// </summary>
+        /// <param name="telNo">cell phone number</param>
+        /// <returns></returns>
         static public bool Exist(string telNo)
         {
-            MissFreshEntities db = new MissFreshEntities();
-            var count = db.Customers.Count(p => p.telNo == telNo);
-            return count > 0;
+            try
+            {
+                MissFreshEntities db = new MissFreshEntities();
+                var count = db.Customers.Count(p => p.telNo == telNo);
+                return count > 0;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
+        /// <summary>
+        /// Wether an account 
+        /// </summary>
+        /// <param name="telNo"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         static public bool Exist(string telNo,string password)
         {
-            MissFreshEntities db = new MissFreshEntities();
-            var count = db.Customers.Count(p => p.telNo == telNo && p.password == password);
-            return count > 0;
+            try
+            {
+                MissFreshEntities db = new MissFreshEntities();
+                var count = db.Customers.Count(p => p.telNo == telNo && p.password == password);
+                return count > 0;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
         }
 
         /// <summary>
@@ -82,6 +119,12 @@ namespace Services
             }
         }
 
+        /// <summary>
+        /// Update account information
+        /// </summary>
+        /// <param name="telNo"></param>
+        /// <param name="code"></param>
+        /// <returns></returns>
         public static ReturnJasonConstruct<DTO.Account> Update(string telNo, int code)
         {
             ReturnJasonConstruct<DTO.Account> obj = new ReturnJasonConstruct<DTO.Account>();

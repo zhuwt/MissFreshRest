@@ -18,9 +18,12 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="accountId" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="receiveAddress" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="area" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="building" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="floor" Type="int" Nullable="false" />
+          <Property Name="number" Type="int" Nullable="false" />
           <Property Name="tel" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="name" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="defaultAddress" Type="bit" />
@@ -55,11 +58,12 @@
           <Property Name="detailName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="unit" Type="int" Nullable="false" />
           <Property Name="category" Type="int" Nullable="false" />
-          <Property Name="price" Type="float" Nullable="false" />
-          <Property Name="sellCount" Type="int" />
-          <Property Name="limited" Type="int" />
-          <Property Name="imageName" Type="nvarchar" MaxLength="256" />
-          <Property Name="goodsStatus" Type="int" />
+          <Property Name="price" Type="decimal" Precision="19" Scale="2" Nullable="false" />
+          <Property Name="sellCount" Type="int" Nullable="false" />
+          <Property Name="limited" Type="int" Nullable="false" />
+          <Property Name="imageName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="goodsStatus" Type="int" Nullable="false" />
+          <Property Name="evaluate" Type="tinyint" />
           <Property Name="createTime" Type="datetime" />
         </EntityType>
         <EntityType Name="GoodsDetail">
@@ -67,7 +71,7 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="imageName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="imageName" Type="nvarchar(max)" Nullable="false" />
           <Property Name="introduce" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Meals">
@@ -76,16 +80,28 @@
           </Key>
           <Property Name="id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="name" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="imangeName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="imangeName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="totalPrice" Type="decimal" Precision="19" Scale="2" Nullable="false" />
+          <Property Name="evaluate" Type="tinyint" />
+        </EntityType>
+        <EntityType Name="MealsDetail">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="mealsId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="goodsId" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <EntityType Name="OrderDetail">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="orderId" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="goodsId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="itemsId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="count" Type="int" Nullable="false" />
+          <Property Name="price" Type="decimal" Precision="19" Scale="2" Nullable="false" />
+          <Property Name="evaluate" Type="tinyint" />
         </EntityType>
         <EntityType Name="Orders">
           <Key>
@@ -95,9 +111,13 @@
           <Property Name="orderNo" Type="bigint" Nullable="false" />
           <Property Name="orderType" Type="int" Nullable="false" />
           <Property Name="orderState" Type="int" Nullable="false" />
-          <Property Name="orderTotalPrice" Type="float" Nullable="false" />
+          <Property Name="totalPrice" Type="decimal" Precision="19" Scale="2" Nullable="false" />
+          <Property Name="totalCount" Type="int" Nullable="false" />
           <Property Name="accountId" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="receiveAddress" Type="int" Nullable="false" />
+          <Property Name="receiveAddress" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="tel" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="receivePerson" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="imangeName" Type="nvarchar" MaxLength="256" />
           <Property Name="createTime" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="sysdiagrams">
@@ -178,6 +198,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_MealsDetail_Goods">
+          <End Role="Goods" Type="Self.Goods" Multiplicity="1" />
+          <End Role="MealsDetail" Type="Self.MealsDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Goods">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="MealsDetail">
+              <PropertyRef Name="goodsId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MealsDetail_Meals">
+          <End Role="Meals" Type="Self.Meals" Multiplicity="1" />
+          <End Role="MealsDetail" Type="Self.MealsDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Meals">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="MealsDetail">
+              <PropertyRef Name="mealsId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_order_Accounts">
           <End Role="Accounts" Type="Self.Accounts" Multiplicity="1" />
           <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
@@ -190,18 +234,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_order_Address">
-          <End Role="Addresses" Type="Self.Addresses" Multiplicity="1" />
-          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Addresses">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Orders">
-              <PropertyRef Name="receiveAddress" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_OrderDetail_Goods">
           <End Role="Goods" Type="Self.Goods" Multiplicity="1" />
           <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
@@ -210,7 +242,19 @@
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="OrderDetail">
-              <PropertyRef Name="goodsId" />
+              <PropertyRef Name="itemsId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderDetail_Meals">
+          <End Role="Meals" Type="Self.Meals" Multiplicity="1" />
+          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Meals">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="itemsId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -234,6 +278,7 @@
           <EntitySet Name="Goods" EntityType="Self.Goods" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GoodsDetail" EntityType="Self.GoodsDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Meals" EntityType="Self.Meals" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MealsDetail" EntityType="Self.MealsDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderDetail" EntityType="Self.OrderDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
@@ -258,16 +303,24 @@
             <End Role="Units" EntitySet="Units" />
             <End Role="Goods" EntitySet="Goods" />
           </AssociationSet>
+          <AssociationSet Name="FK_MealsDetail_Goods" Association="Self.FK_MealsDetail_Goods">
+            <End Role="Goods" EntitySet="Goods" />
+            <End Role="MealsDetail" EntitySet="MealsDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MealsDetail_Meals" Association="Self.FK_MealsDetail_Meals">
+            <End Role="Meals" EntitySet="Meals" />
+            <End Role="MealsDetail" EntitySet="MealsDetail" />
+          </AssociationSet>
           <AssociationSet Name="FK_order_Accounts" Association="Self.FK_order_Accounts">
             <End Role="Accounts" EntitySet="Accounts" />
             <End Role="Orders" EntitySet="Orders" />
           </AssociationSet>
-          <AssociationSet Name="FK_order_Address" Association="Self.FK_order_Address">
-            <End Role="Addresses" EntitySet="Addresses" />
-            <End Role="Orders" EntitySet="Orders" />
-          </AssociationSet>
           <AssociationSet Name="FK_OrderDetail_Goods" Association="Self.FK_OrderDetail_Goods">
             <End Role="Goods" EntitySet="Goods" />
+            <End Role="OrderDetail" EntitySet="OrderDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderDetail_Meals" Association="Self.FK_OrderDetail_Meals">
+            <End Role="Meals" EntitySet="Meals" />
             <End Role="OrderDetail" EntitySet="OrderDetail" />
           </AssociationSet>
           <AssociationSet Name="FK_OrderDetail_order" Association="Self.FK_OrderDetail_order">
@@ -296,14 +349,16 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="id" Type="Guid" Nullable="false" />
           <Property Name="accountId" Type="Guid" Nullable="false" />
-          <Property Name="receiveAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="area" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="building" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="floor" Type="Int32" Nullable="false" />
+          <Property Name="number" Type="Int32" Nullable="false" />
           <Property Name="tel" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="name" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="defaultAddress" Type="Boolean" />
           <NavigationProperty Name="Account" Relationship="Self.FK_Address_Accounts" FromRole="Addresses" ToRole="Accounts" />
-          <NavigationProperty Name="Orders" Relationship="Self.FK_order_Address" FromRole="Addresses" ToRole="Orders" />
         </EntityType>
         <EntityType Name="Category">
           <Key>
@@ -337,15 +392,17 @@
           <Property Name="detailName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="unit" Type="Int32" Nullable="false" />
           <Property Name="category" Type="Int32" Nullable="false" />
-          <Property Name="price" Type="Double" Nullable="false" />
-          <Property Name="sellCount" Type="Int32" />
-          <Property Name="limited" Type="Int32" />
-          <Property Name="imageName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="goodsStatus" Type="Int32" />
+          <Property Name="price" Type="Decimal" Precision="19" Scale="2" Nullable="false" />
+          <Property Name="sellCount" Type="Int32" Nullable="false" />
+          <Property Name="limited" Type="Int32" Nullable="false" />
+          <Property Name="imageName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="goodsStatus" Type="Int32" Nullable="false" />
+          <Property Name="evaluate" Type="Byte" />
           <Property Name="createTime" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Category1" Relationship="Self.FK_Goods_Classification" FromRole="Goods" ToRole="Category" />
           <NavigationProperty Name="GoodsDetail" Relationship="Self.FK_Goods_GoodsDetail" FromRole="Goods" ToRole="GoodsDetail" />
           <NavigationProperty Name="Unit1" Relationship="Self.FK_Goods_Units" FromRole="Goods" ToRole="Units" />
+          <NavigationProperty Name="MealsDetails" Relationship="Self.FK_MealsDetail_Goods" FromRole="Goods" ToRole="MealsDetail" />
           <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetail_Goods" FromRole="Goods" ToRole="OrderDetail" />
         </EntityType>
         <EntityType Name="GoodsDetail">
@@ -353,7 +410,7 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Guid" Nullable="false" />
-          <Property Name="imageName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="imageName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="introduce" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Good" Relationship="Self.FK_Goods_GoodsDetail" FromRole="GoodsDetail" ToRole="Goods" />
         </EntityType>
@@ -363,17 +420,34 @@
           </Key>
           <Property Name="id" Type="Guid" Nullable="false" />
           <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="imangeName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="imangeName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="totalPrice" Type="Decimal" Precision="19" Scale="2" Nullable="false" />
+          <Property Name="evaluate" Type="Byte" />
+          <NavigationProperty Name="MealsDetails" Relationship="Self.FK_MealsDetail_Meals" FromRole="Meals" ToRole="MealsDetail" />
+          <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetail_Meals" FromRole="Meals" ToRole="OrderDetail" />
+        </EntityType>
+        <EntityType Name="MealsDetail">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Guid" Nullable="false" />
+          <Property Name="mealsId" Type="Guid" Nullable="false" />
+          <Property Name="goodsId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Good" Relationship="Self.FK_MealsDetail_Goods" FromRole="MealsDetail" ToRole="Goods" />
+          <NavigationProperty Name="Meal" Relationship="Self.FK_MealsDetail_Meals" FromRole="MealsDetail" ToRole="Meals" />
         </EntityType>
         <EntityType Name="OrderDetail">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="id" Type="Guid" Nullable="false" />
           <Property Name="orderId" Type="Guid" Nullable="false" />
-          <Property Name="goodsId" Type="Guid" Nullable="false" />
+          <Property Name="itemsId" Type="Guid" Nullable="false" />
           <Property Name="count" Type="Int32" Nullable="false" />
+          <Property Name="price" Type="Decimal" Precision="19" Scale="2" Nullable="false" />
+          <Property Name="evaluate" Type="Byte" />
           <NavigationProperty Name="Good" Relationship="Self.FK_OrderDetail_Goods" FromRole="OrderDetail" ToRole="Goods" />
+          <NavigationProperty Name="Meal" Relationship="Self.FK_OrderDetail_Meals" FromRole="OrderDetail" ToRole="Meals" />
           <NavigationProperty Name="Order" Relationship="Self.FK_OrderDetail_order" FromRole="OrderDetail" ToRole="Orders" />
         </EntityType>
         <EntityType Name="Order">
@@ -384,12 +458,15 @@
           <Property Name="orderNo" Type="Int64" Nullable="false" />
           <Property Name="orderType" Type="Int32" Nullable="false" />
           <Property Name="orderState" Type="Int32" Nullable="false" />
-          <Property Name="orderTotalPrice" Type="Double" Nullable="false" />
+          <Property Name="totalPrice" Type="Decimal" Precision="19" Scale="2" Nullable="false" />
+          <Property Name="totalCount" Type="Int32" Nullable="false" />
           <Property Name="accountId" Type="Guid" Nullable="false" />
-          <Property Name="receiveAddress" Type="Int32" Nullable="false" />
+          <Property Name="receiveAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="tel" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="receivePerson" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="imangeName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="createTime" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Account" Relationship="Self.FK_order_Accounts" FromRole="Orders" ToRole="Accounts" />
-          <NavigationProperty Name="Address" Relationship="Self.FK_order_Address" FromRole="Orders" ToRole="Addresses" />
           <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetail_order" FromRole="Orders" ToRole="OrderDetail" />
         </EntityType>
         <EntityType Name="sysdiagram">
@@ -447,18 +524,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_order_Address">
-          <End Role="Addresses" Type="Self.Address" Multiplicity="1" />
-          <End Role="Orders" Type="Self.Order" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Addresses">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Orders">
-              <PropertyRef Name="receiveAddress" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Goods_Classification">
           <End Role="Category" Type="Self.Category" Multiplicity="1" />
           <End Role="Goods" Type="Self.Good" Multiplicity="*" />
@@ -495,6 +560,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_MealsDetail_Goods">
+          <End Role="Goods" Type="Self.Good" Multiplicity="1" />
+          <End Role="MealsDetail" Type="Self.MealsDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Goods">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="MealsDetail">
+              <PropertyRef Name="goodsId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_OrderDetail_Goods">
           <End Role="Goods" Type="Self.Good" Multiplicity="1" />
           <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
@@ -503,7 +580,31 @@
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="OrderDetail">
-              <PropertyRef Name="goodsId" />
+              <PropertyRef Name="itemsId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MealsDetail_Meals">
+          <End Role="Meals" Type="Self.Meal" Multiplicity="1" />
+          <End Role="MealsDetail" Type="Self.MealsDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Meals">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="MealsDetail">
+              <PropertyRef Name="mealsId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderDetail_Meals">
+          <End Role="Meals" Type="Self.Meal" Multiplicity="1" />
+          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Meals">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="itemsId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -527,6 +628,7 @@
           <EntitySet Name="Goods" EntityType="Self.Good" />
           <EntitySet Name="GoodsDetails" EntityType="Self.GoodsDetail" />
           <EntitySet Name="Meals" EntityType="Self.Meal" />
+          <EntitySet Name="MealsDetails" EntityType="Self.MealsDetail" />
           <EntitySet Name="OrderDetails" EntityType="Self.OrderDetail" />
           <EntitySet Name="Orders" EntityType="Self.Order" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
@@ -543,10 +645,6 @@
             <End Role="Accounts" EntitySet="Accounts" />
             <End Role="Orders" EntitySet="Orders" />
           </AssociationSet>
-          <AssociationSet Name="FK_order_Address" Association="Self.FK_order_Address">
-            <End Role="Addresses" EntitySet="Addresses" />
-            <End Role="Orders" EntitySet="Orders" />
-          </AssociationSet>
           <AssociationSet Name="FK_Goods_Classification" Association="Self.FK_Goods_Classification">
             <End Role="Category" EntitySet="Categories" />
             <End Role="Goods" EntitySet="Goods" />
@@ -559,8 +657,20 @@
             <End Role="Units" EntitySet="Units" />
             <End Role="Goods" EntitySet="Goods" />
           </AssociationSet>
+          <AssociationSet Name="FK_MealsDetail_Goods" Association="Self.FK_MealsDetail_Goods">
+            <End Role="Goods" EntitySet="Goods" />
+            <End Role="MealsDetail" EntitySet="MealsDetails" />
+          </AssociationSet>
           <AssociationSet Name="FK_OrderDetail_Goods" Association="Self.FK_OrderDetail_Goods">
             <End Role="Goods" EntitySet="Goods" />
+            <End Role="OrderDetail" EntitySet="OrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MealsDetail_Meals" Association="Self.FK_MealsDetail_Meals">
+            <End Role="Meals" EntitySet="Meals" />
+            <End Role="MealsDetail" EntitySet="MealsDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderDetail_Meals" Association="Self.FK_OrderDetail_Meals">
+            <End Role="Meals" EntitySet="Meals" />
             <End Role="OrderDetail" EntitySet="OrderDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_OrderDetail_order" Association="Self.FK_OrderDetail_order">
@@ -589,7 +699,10 @@
               <MappingFragment StoreEntitySet="Addresses">
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="accountId" ColumnName="accountId" />
-                <ScalarProperty Name="receiveAddress" ColumnName="receiveAddress" />
+                <ScalarProperty Name="area" ColumnName="area" />
+                <ScalarProperty Name="building" ColumnName="building" />
+                <ScalarProperty Name="floor" ColumnName="floor" />
+                <ScalarProperty Name="number" ColumnName="number" />
                 <ScalarProperty Name="tel" ColumnName="tel" />
                 <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="defaultAddress" ColumnName="defaultAddress" />
@@ -632,6 +745,7 @@
                 <ScalarProperty Name="limited" ColumnName="limited" />
                 <ScalarProperty Name="imageName" ColumnName="imageName" />
                 <ScalarProperty Name="goodsStatus" ColumnName="goodsStatus" />
+                <ScalarProperty Name="evaluate" ColumnName="evaluate" />
                 <ScalarProperty Name="createTime" ColumnName="createTime" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -651,6 +765,17 @@
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="imangeName" ColumnName="imangeName" />
+                <ScalarProperty Name="totalPrice" ColumnName="totalPrice" />
+                <ScalarProperty Name="evaluate" ColumnName="evaluate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MealsDetails">
+            <EntityTypeMapping TypeName="MissFreshModel.MealsDetail">
+              <MappingFragment StoreEntitySet="MealsDetail">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="mealsId" ColumnName="mealsId" />
+                <ScalarProperty Name="goodsId" ColumnName="goodsId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -659,8 +784,10 @@
               <MappingFragment StoreEntitySet="OrderDetail">
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="orderId" ColumnName="orderId" />
-                <ScalarProperty Name="goodsId" ColumnName="goodsId" />
+                <ScalarProperty Name="itemsId" ColumnName="itemsId" />
                 <ScalarProperty Name="count" ColumnName="count" />
+                <ScalarProperty Name="price" ColumnName="price" />
+                <ScalarProperty Name="evaluate" ColumnName="evaluate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -671,9 +798,13 @@
                 <ScalarProperty Name="orderNo" ColumnName="orderNo" />
                 <ScalarProperty Name="orderType" ColumnName="orderType" />
                 <ScalarProperty Name="orderState" ColumnName="orderState" />
-                <ScalarProperty Name="orderTotalPrice" ColumnName="orderTotalPrice" />
+                <ScalarProperty Name="totalPrice" ColumnName="totalPrice" />
+                <ScalarProperty Name="totalCount" ColumnName="totalCount" />
                 <ScalarProperty Name="accountId" ColumnName="accountId" />
                 <ScalarProperty Name="receiveAddress" ColumnName="receiveAddress" />
+                <ScalarProperty Name="tel" ColumnName="tel" />
+                <ScalarProperty Name="receivePerson" ColumnName="receivePerson" />
+                <ScalarProperty Name="imangeName" ColumnName="imangeName" />
                 <ScalarProperty Name="createTime" ColumnName="createTime" />
               </MappingFragment>
             </EntityTypeMapping>

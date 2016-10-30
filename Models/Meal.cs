@@ -14,8 +14,22 @@ namespace Models
     
     public partial class Meal
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Meal()
+        {
+            this.MealsDetails = new HashSet<MealsDetail>();
+            this.OrderDetails = new HashSet<OrderDetail>();
+        }
+    
         public System.Guid id { get; set; }
         public string name { get; set; }
         public string imangeName { get; set; }
+        public decimal totalPrice { get; set; }
+        public Nullable<byte> evaluate { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<MealsDetail> MealsDetails { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }
