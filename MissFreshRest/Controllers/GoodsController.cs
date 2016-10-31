@@ -5,9 +5,11 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace MissFreshRest.Controllers
 {
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class GoodsController : ApiController
     {
         // GET: api/Goods
@@ -20,7 +22,7 @@ namespace MissFreshRest.Controllers
 
         // GET: api/Goods/5
         [HttpGet]
-        [Route("goods")]
+        [Route("goods/{id}")]
         public ReturnJasonConstruct<DTO.Goods> Get(Guid id)
         {
             return Services.Goods.GetEntireGoodsInformation(id);

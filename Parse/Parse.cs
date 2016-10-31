@@ -102,7 +102,23 @@ namespace Parse
         #region Goods
         public static DTO.Goods ToDTO(this Models.Good model)
         {
-            return model.ParseObject<Models.Good, DTO.Goods>();
+            var goods = new DTO.Goods
+            {
+                id = model.id,
+                name = model.name,
+                detailName = model.detailName,
+                unit = model.Unit1.unit1,
+                category = model.Category1.category1,
+                price = model.price,
+                sellCount = model.sellCount,
+                limited = model.limited,
+                imageName = model.imageName,
+                goodsStatus = model.goodsStatus,
+                evaluate = model.evaluate,
+                goodsDetail = null
+            };
+            goods.goodsDetail = model.GoodsDetail.ToDTO();
+            return goods;
         }
         public static Models.Good ToModel(this DTO.Goods DTOObject)
         {
