@@ -20,7 +20,7 @@ namespace Services
             complete = 4,   //已经完成
             close = 5       //关闭
         }
-        public ReturnJasonConstruct<IList<DTO.Order>> GetAllOrders()
+        public static ReturnJasonConstruct<IList<DTO.Order>> GetAllOrders()
         {
             ReturnJasonConstruct<IList<DTO.Order>> list = new ReturnJasonConstruct<IList<DTO.Order>>();
             try
@@ -37,7 +37,24 @@ namespace Services
             }
         }
 
-        public ReturnJasonConstruct<DTO.Order> Create(DTO.Order order)
+        public static ReturnJasonConstruct<DTO.Order> GetEntireOrderInformation(Guid id)
+        {
+            ReturnJasonConstruct<DTO.Order> list = new ReturnJasonConstruct<DTO.Order>();
+            try
+            {
+                MissFreshEntities db = new MissFreshEntities();
+                var order = db.Orders.SingleOrDefault(p => p.id == id);
+                list.SetDTOObject(order.ToDTO());
+                return list;
+            }
+            catch (Exception ex)
+            {
+                list.SetFailedInformation(ex.Message, null);
+                return list;
+            }
+        }
+
+        public static ReturnJasonConstruct<DTO.Order> Create(DTO.Order order)
         {
             ReturnJasonConstruct<DTO.Order> DTOObject = new ReturnJasonConstruct<DTO.Order>();
             try
@@ -56,7 +73,7 @@ namespace Services
             }
         }
 
-        public ReturnJasonConstruct<DTO.Order> UpdateOrderStatus(Guid id)
+        public static ReturnJasonConstruct<DTO.Order> UpdateOrderStatus(Guid id)
         {
             ReturnJasonConstruct<DTO.Order> DTOObject = new ReturnJasonConstruct<DTO.Order>();
             try
@@ -85,7 +102,7 @@ namespace Services
             }
         }
 
-        public ReturnJasonConstruct<DTO.Order> CloseOrder(Guid id)
+        public static ReturnJasonConstruct<DTO.Order> CloseOrder(Guid id)
         {
             ReturnJasonConstruct<DTO.Order> DTOObject = new ReturnJasonConstruct<DTO.Order>();
             try

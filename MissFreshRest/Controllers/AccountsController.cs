@@ -11,9 +11,8 @@ using System.Web.Http.Cors;
 namespace MissFreshRest.Controllers
 {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
-    public class AccountController : ApiController
+    public class AccountsController : ApiController
     {
-        // GET: api/Account
         [HttpGet]
         [Route("Account/Check")]
         public ReturnJasonConstruct<DTO.Account> Get(string telNo)
@@ -40,7 +39,6 @@ namespace MissFreshRest.Controllers
             }
         }
 
-        // GET: api/Account/5
         [HttpGet]
         [Route("Account")]
         public bool Get(string telNo,string password)
@@ -48,13 +46,6 @@ namespace MissFreshRest.Controllers
             return Services.Account.Exist(telNo, password);
         }
 
-        //// POST: api/Account
-        //public string Post([FromBody]string value)
-        //{
-        //    return "post";
-        //}
-
-        // PUT: api/Account/5
         [HttpPut]
         [Route("Account")]
         public ReturnJasonConstruct<DTO.Account> Put([FromBody]DTO.Account dto)
@@ -70,11 +61,5 @@ namespace MissFreshRest.Controllers
                 return Services.Account.Update(dto);
             }
         }
-
-        //// DELETE: api/Account/5
-        //public string Delete(int id)
-        //{
-        //    return "delete";
-        //}
     }
 }

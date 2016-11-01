@@ -28,6 +28,23 @@ namespace Services
             }
         }
 
+        static public ReturnJasonConstruct<DTO.Address> GetDefaultAddress(Guid accountId)
+        {
+            ReturnJasonConstruct<DTO.Address> obj = new ReturnJasonConstruct<DTO.Address>();
+            try
+            {
+                MissFreshEntities db = new MissFreshEntities();
+                var address = db.Addresses.SingleOrDefault(p => p.accountId == accountId && p.defaultAddress == true);
+                obj.SetDTOObject(address.ToDTO());
+                return obj;
+            }
+            catch (Exception ex)
+            {
+                obj.SetFailedInformation(ex.Message, null);
+                return obj;
+            }
+        }
+
         static public ReturnJasonConstruct<DTO.Address> Create(DTO.Address dto)
         {
             ReturnJasonConstruct<DTO.Address> obj = new ReturnJasonConstruct<DTO.Address>();
