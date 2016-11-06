@@ -229,11 +229,23 @@ namespace Parse
         #region Order
         public static DTO.Order ToDTO(this Models.Order model)
         {
-            return model.ParseObject<Models.Order, DTO.Order>();
+            var dto = model.ParseObject<Models.Order, DTO.Order>();
+            dto.orderDetailList = new List<DTO.OrderDetail>();
+            foreach (var item in model.OrderDetails)
+            {
+                dto.orderDetailList.Add(item.ToDTO());
+            }
+            return dto;
         }
         public static Models.Order ToModel(this DTO.Order DTOObject)
         {
-            return DTOObject.ParseObject<DTO.Order, Models.Order>();
+            var model = DTOObject.ParseObject<DTO.Order, Models.Order>();
+            foreach (var item in DTOObject.orderDetailList)
+            {
+                model.OrderDetails.Add(item.ToModel());
+            }
+
+            return model;
         }
         public static IList<DTO.Order> ToDTOs(this IList<Models.Order> models)
         {
@@ -247,6 +259,33 @@ namespace Parse
         public static IList<Models.Order> ToModels(this IList<DTO.Order> DTOObjects)
         {
             List<Models.Order> list = new List<Models.Order>();
+            foreach (var item in DTOObjects)
+            {
+                list.Add(item.ToModel());
+            }
+            return list;
+        }
+        //orderDetail
+        public static DTO.OrderDetail ToDTO(this Models.OrderDetail model)
+        {
+            return model.ParseObject<Models.OrderDetail, DTO.OrderDetail>();
+        }
+        public static Models.OrderDetail ToModel(this DTO.OrderDetail DTOObject)
+        {
+            return DTOObject.ParseObject<DTO.OrderDetail, Models.OrderDetail>();
+        }
+        public static IList<DTO.OrderDetail> ToDTOs(this IList<Models.OrderDetail> models)
+        {
+            List<DTO.OrderDetail> list = new List<DTO.OrderDetail>();
+            foreach (var item in models)
+            {
+                list.Add(item.ToDTO());
+            }
+            return list;
+        }
+        public static IList<Models.OrderDetail> ToModels(this IList<DTO.OrderDetail> DTOObjects)
+        {
+            List<Models.OrderDetail> list = new List<Models.OrderDetail>();
             foreach (var item in DTOObjects)
             {
                 list.Add(item.ToModel());

@@ -75,6 +75,12 @@
     <Compile Include="MealsDetail.cs">
       <DependentUpon>MissFresh.tt</DependentUpon>
     </Compile>
+    <Compile Include="MealsOrder.cs">
+      <DependentUpon>MissFresh.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MealsOrderDetail.cs">
+      <DependentUpon>MissFresh.tt</DependentUpon>
+    </Compile>
     <Compile Include="MissFresh.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

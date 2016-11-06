@@ -12,16 +12,16 @@ namespace Models
     using System;
     using System.Collections.Generic;
     
-    public partial class OrderDetail
+    public partial class MealsOrderDetail
     {
         public System.Guid id { get; set; }
-        public System.Guid orderId { get; set; }
-        public System.Guid goodsId { get; set; }
+        public System.Guid mealsOrderId { get; set; }
+        public System.Guid mealsId { get; set; }
         public int count { get; set; }
         public decimal price { get; set; }
         public Nullable<byte> evaluate { get; set; }
     
-        public virtual Good Good { get; set; }
-        public virtual Order Order { get; set; }
+        public virtual Meal Meal { get; set; }
+        public virtual MealsOrder MealsOrder { get; set; }
     }
 }

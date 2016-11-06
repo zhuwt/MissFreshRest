@@ -38,6 +38,7 @@ namespace Services
                 var goodsListQuery = from r in db.MealsDetails
                                      join g in db.Goods
                                      on r.goodsId equals g.id
+                                     where r.mealsId == mealsId
                                      select g;
                 var goodsList = goodsListQuery.ToList();
                 var DTOobject = meals.ToDTO();

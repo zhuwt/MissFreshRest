@@ -18,18 +18,21 @@ namespace Models
         public Meal()
         {
             this.MealsDetails = new HashSet<MealsDetail>();
-            this.OrderDetails = new HashSet<OrderDetail>();
+            this.MealsOrderDetails = new HashSet<MealsOrderDetail>();
         }
     
         public System.Guid id { get; set; }
         public string name { get; set; }
         public string imangeName { get; set; }
         public decimal totalPrice { get; set; }
+        public int sellCount { get; set; }
+        public int stock { get; set; }
         public Nullable<byte> evaluate { get; set; }
+        public System.DateTime createTime { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MealsDetail> MealsDetails { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        public virtual ICollection<MealsOrderDetail> MealsOrderDetails { get; set; }
     }
 }

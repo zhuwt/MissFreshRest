@@ -12,12 +12,12 @@ namespace Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Order
+    public partial class MealsOrder
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Order()
+        public MealsOrder()
         {
-            this.OrderDetails = new HashSet<OrderDetail>();
+            this.MealsOrderDetails = new HashSet<MealsOrderDetail>();
         }
     
         public System.Guid id { get; set; }
@@ -34,6 +34,6 @@ namespace Models
     
         public virtual Account Account { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        public virtual ICollection<MealsOrderDetail> MealsOrderDetails { get; set; }
     }
 }

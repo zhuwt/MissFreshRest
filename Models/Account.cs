@@ -18,6 +18,7 @@ namespace Models
         public Account()
         {
             this.Addresses = new HashSet<Address>();
+            this.MealsOrders = new HashSet<MealsOrder>();
             this.Orders = new HashSet<Order>();
         }
     
@@ -29,6 +30,8 @@ namespace Models
         public virtual Customer Customer { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Address> Addresses { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<MealsOrder> MealsOrders { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Order> Orders { get; set; }
     }

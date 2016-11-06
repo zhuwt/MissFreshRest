@@ -28,11 +28,12 @@ namespace Models
         public int category { get; set; }
         public decimal price { get; set; }
         public int sellCount { get; set; }
+        public int stock { get; set; }
         public int limited { get; set; }
         public string imageName { get; set; }
         public int goodsStatus { get; set; }
         public Nullable<byte> evaluate { get; set; }
-        public Nullable<System.DateTime> createTime { get; set; }
+        public System.DateTime createTime { get; set; }
     
         public virtual Category Category1 { get; set; }
         public virtual GoodsDetail GoodsDetail { get; set; }

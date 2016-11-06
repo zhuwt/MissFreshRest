@@ -33,6 +33,8 @@ namespace Models
         public virtual DbSet<GoodsDetail> GoodsDetails { get; set; }
         public virtual DbSet<Meal> Meals { get; set; }
         public virtual DbSet<MealsDetail> MealsDetails { get; set; }
+        public virtual DbSet<MealsOrderDetail> MealsOrderDetails { get; set; }
+        public virtual DbSet<MealsOrder> MealsOrders { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }

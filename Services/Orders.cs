@@ -11,6 +11,12 @@ namespace Services
 {
     public class Orders
     {
+        enum orderType
+        {
+            goods = 0,      //创建
+            meals = 1       //已支付
+        }
+
         enum orderStatus
         {
             Created = 0,    //创建
@@ -20,6 +26,7 @@ namespace Services
             complete = 4,   //已经完成
             close = 5       //关闭
         }
+
         public static ReturnJasonConstruct<IList<DTO.Order>> GetAllOrders()
         {
             ReturnJasonConstruct<IList<DTO.Order>> list = new ReturnJasonConstruct<IList<DTO.Order>>();
@@ -61,6 +68,11 @@ namespace Services
             {
                 MissFreshEntities db = new MissFreshEntities();
                 var model = order.ToModel();
+                //set the first goodsimage for order image
+                Guid goodsId = order.orderDetailList[0].goodsId;
+                var goods = db.Goods.SingleOrDefault(p=>p.id == goodsId);
+                model.imangeName = goods.imageName;
+
                 db.Orders.Add(model);
                 db.SaveChanges();
                 DTOObject.SetDTOObject(model.ToDTO());
@@ -90,7 +102,7 @@ namespace Services
                     DTOObject.SetWarningInformation("当前订单为结束或者关闭状态，无法改变状态.");
                     return DTOObject;
                 }
-                order.orderState = order.orderState++;
+                order.orderState += 1;
                 db.SaveChanges();
                 DTOObject.SetDTOObject(order.ToDTO());
                 return DTOObject;
