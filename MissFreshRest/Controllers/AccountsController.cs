@@ -14,7 +14,7 @@ namespace MissFreshRest.Controllers
     public class AccountsController : ApiController
     {
         [HttpGet]
-        [Route("Account/Check")]
+        [Route("account/Check")]
         public ReturnJasonConstruct<DTO.Account> Get(string telNo)
         {
             DTO.Account ac = new DTO.Account();
@@ -40,14 +40,14 @@ namespace MissFreshRest.Controllers
         }
 
         [HttpGet]
-        [Route("Account")]
+        [Route("account")]
         public bool Get(string telNo,string password)
         {
             return Services.Account.Exist(telNo, password);
         }
 
         [HttpPut]
-        [Route("Account")]
+        [Route("account")]
         public ReturnJasonConstruct<DTO.Account> Put([FromBody]DTO.Account dto)
         {
             ReturnJasonConstruct<DTO.Account> obj = new ReturnJasonConstruct<DTO.Account>();

@@ -10,50 +10,50 @@ using System.Web.Http.Cors;
 namespace MissFreshRest.Controllers
 {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
-    public class OrdersController : ApiController
+    public class MealsOrdersController : ApiController
     {
         [HttpGet]
-        [Route("orders")]
-        public ReturnJasonConstruct<IList<DTO.Order>> Get()
+        [Route("mealsOrders")]
+        public ReturnJasonConstruct<IList<DTO.MealsOrder>> Get()
         {
-            return Services.Orders.GetAllOrders();
+            return Services.MealsOrder.GetAllOrder();
         }
 
         [HttpGet]
-        [Route("orders/{id}")]
-        public ReturnJasonConstruct<DTO.Order> Get(Guid id)
+        [Route("mealsOrders/{id}")]
+        public ReturnJasonConstruct<DTO.EntireMealsOrder> Get(Guid id)
         {
-            return Services.Orders.GetEntireOrderInformation(id);
+            return Services.MealsOrder.GetEntireOrderInformation(id);
         }
 
         [HttpPost]
-        [Route("orders/")]
-        public ReturnJasonConstruct<DTO.Order> Post([FromBody]DTO.Order order)
+        [Route("mealsOrders/")]
+        public ReturnJasonConstruct<DTO.MealsOrder> Post([FromBody]DTO.MealsOrder order)
         {
             order.createTime = DateTime.Now;
             order.id = Guid.NewGuid();
             var temp = string.Format("{0:0000}{1:00}{2:00}{3:00}{4:00}{5:00}{6:000}", order.createTime.Year, order.createTime.Month, order.createTime.Day, order.createTime.Hour, order.createTime.Minute, order.createTime.Second, order.createTime.Millisecond);////, , , , 
             order.orderNo = long.Parse(temp);
-            foreach(var item in order.orderDetailList)
+            foreach (var item in order.orderDetail)
             {
                 item.id = Guid.NewGuid();
             }
 
-            return Services.Orders.Create(order);
+            return Services.MealsOrder.Create(order);
         }
 
         [HttpPut]
-        [Route("orders/updateStatus")]
-        public ReturnJasonConstruct<DTO.Order> Put(Guid id)
+        [Route("mealsOrders/updateStatus")]
+        public ReturnJasonConstruct<DTO.MealsOrder> Put(Guid id)
         {
-            return Services.Orders.UpdateOrderStatus(id);
+            return Services.MealsOrder.UpdateOrderStatus(id);
         }
 
         [HttpPut]
-        [Route("orders/close")]
-        public ReturnJasonConstruct<DTO.Order> close(Guid id)
+        [Route("mealsOrders/close")]
+        public ReturnJasonConstruct<DTO.MealsOrder> close(Guid id)
         {
-            return Services.Orders.CloseOrder(id);
+            return Services.MealsOrder.CloseOrder(id);
         }
     }
 }

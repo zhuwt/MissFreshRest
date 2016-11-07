@@ -44,9 +44,11 @@
     <Compile Include="Address.cs" />
     <Compile Include="Category.cs" />
     <Compile Include="Customer.cs" />
+    <Compile Include="EntireMealsOrder.cs" />
     <Compile Include="Goods.cs" />
     <Compile Include="GoodsDetail.cs" />
     <Compile Include="Meals.cs" />
+    <Compile Include="MealsOrder.cs" />
     <Compile Include="Order.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReturnJasonConstruct.cs" />

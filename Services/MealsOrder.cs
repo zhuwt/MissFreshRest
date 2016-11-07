@@ -1,39 +1,23 @@
-﻿using DTO;
-using Models;
+﻿using Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Parse;
+using DTO;
 
 namespace Services
 {
-    public enum orderType
+    public class MealsOrder
     {
-        goods = 0,      //create
-        meals = 1       //payed
-    }
-
-    public enum orderStatus
-    {
-        Created = 0,    //create
-        payed = 1,      //payed
-        deal = 2,       //clean up
-        trasfer = 3,    //sending
-        complete = 4,   //complete
-        close = 5       //close
-    }
-
-    public class Orders
-    {
-        public static ReturnJasonConstruct<IList<DTO.Order>> GetAllOrders()
+        public static ReturnJasonConstruct<IList<DTO.MealsOrder>> GetAllOrder()
         {
-            ReturnJasonConstruct<IList<DTO.Order>> list = new ReturnJasonConstruct<IList<DTO.Order>>();
+            ReturnJasonConstruct<IList<DTO.MealsOrder>> list = new ReturnJasonConstruct<IList<DTO.MealsOrder>>();
             try
             {
                 MissFreshEntities db = new MissFreshEntities();
-                var orderList = db.Orders.ToList();
+                var orderList = db.MealsOrders.ToList();
                 list.SetDTOObject(orderList.ToDTOs());
                 return list;
             }
@@ -44,14 +28,23 @@ namespace Services
             }
         }
 
-        public static ReturnJasonConstruct<DTO.Order> GetEntireOrderInformation(Guid id)
+        public static ReturnJasonConstruct<DTO.EntireMealsOrder> GetEntireOrderInformation(Guid id)
         {
-            ReturnJasonConstruct<DTO.Order> list = new ReturnJasonConstruct<DTO.Order>();
+            ReturnJasonConstruct<DTO.EntireMealsOrder> list = new ReturnJasonConstruct<DTO.EntireMealsOrder>();
             try
             {
                 MissFreshEntities db = new MissFreshEntities();
-                var order = db.Orders.SingleOrDefault(p => p.id == id);
-                list.SetDTOObject(order.ToDTO());
+                var order = db.MealsOrders.SingleOrDefault(p => p.id == id);
+                var dto = order.ToEntireMealsOrder();
+                var temp = from r in db.MealsOrderDetails.Where(p => p.mealsOrderId == id)
+                           join m in db.Meals.AsQueryable<Models.Meal>()
+                           on r.mealsId equals m.id
+                           select m;
+                foreach (var item in temp.ToList())
+                {
+                    dto.orderDetail.Add(item.ToDTO());
+                }
+                list.SetDTOObject(dto);
                 return list;
             }
             catch (Exception ex)
@@ -61,26 +54,25 @@ namespace Services
             }
         }
 
-        public static ReturnJasonConstruct<DTO.Order> Create(DTO.Order order)
+        public static ReturnJasonConstruct<DTO.MealsOrder> Create(DTO.MealsOrder order)
         {
-            ReturnJasonConstruct<DTO.Order> DTOObject = new ReturnJasonConstruct<DTO.Order>();
+            ReturnJasonConstruct<DTO.MealsOrder> DTOObject = new ReturnJasonConstruct<DTO.MealsOrder>();
             try
             {
                 MissFreshEntities db = new MissFreshEntities();
                 var model = order.ToModel();
-                if (order.orderDetailList.Count == 0)
+                if (model.MealsOrderDetails.Count == 0)
                 {
-                    DTOObject.SetWarningInformation("订单信息为空.请选择需要购买的菜品.");
+                    DTOObject.SetWarningInformation("订单信息为空.请选择需要购买的套餐.");
                     return DTOObject;
                 }
-
                 //set the first goodsimage for order image
-                Guid goodsId = order.orderDetailList[0].goodsId;
-                var goods = db.Goods.SingleOrDefault(p => p.id == goodsId);
-                model.imangeName = goods.imageName;
-                foreach (var item in order.orderDetailList)
+                Guid goodsId = order.orderDetail[0].mealsId;
+                var mealsObj = db.Meals.SingleOrDefault(p => p.id == goodsId);
+                model.imangeName = mealsObj.imangeName;
+                foreach (var item in model.MealsOrderDetails)
                 {
-                    var goodsInfo = db.Goods.Single(p => p.id == item.goodsId);
+                    var goodsInfo = db.Goods.Single(p => p.id == item.mealsId);
                     goodsInfo.stock -= item.count;
                     if (goodsInfo.stock < 0)
                     {
@@ -88,7 +80,8 @@ namespace Services
                         return DTOObject;
                     }
                 }
-                db.Orders.Add(model);
+
+                db.MealsOrders.Add(model);
                 db.SaveChanges();
                 DTOObject.SetDTOObject(model.ToDTO());
                 return DTOObject;
@@ -100,13 +93,13 @@ namespace Services
             }
         }
 
-        public static ReturnJasonConstruct<DTO.Order> UpdateOrderStatus(Guid id)
+        public static ReturnJasonConstruct<DTO.MealsOrder> UpdateOrderStatus(Guid id)
         {
-            ReturnJasonConstruct<DTO.Order> DTOObject = new ReturnJasonConstruct<DTO.Order>();
+            ReturnJasonConstruct<DTO.MealsOrder> DTOObject = new ReturnJasonConstruct<DTO.MealsOrder>();
             try
             {
                 MissFreshEntities db = new MissFreshEntities();
-                var order = db.Orders.SingleOrDefault(p => p.id == id);
+                var order = db.MealsOrders.SingleOrDefault(p => p.id == id);
                 if (order.orderState == (int)orderStatus.Created)
                 {
                     DTOObject.SetWarningInformation("当前订单没有支付，无法改变状态.");
@@ -129,13 +122,13 @@ namespace Services
             }
         }
 
-        public static ReturnJasonConstruct<DTO.Order> CloseOrder(Guid id)
+        public static ReturnJasonConstruct<DTO.MealsOrder> CloseOrder(Guid id)
         {
-            ReturnJasonConstruct<DTO.Order> DTOObject = new ReturnJasonConstruct<DTO.Order>();
+            ReturnJasonConstruct<DTO.MealsOrder> DTOObject = new ReturnJasonConstruct<DTO.MealsOrder>();
             try
             {
                 MissFreshEntities db = new MissFreshEntities();
-                var order = db.Orders.SingleOrDefault(p => p.id == id);
+                var order = db.MealsOrders.SingleOrDefault(p => p.id == id);
                 if (order.orderState != (int)orderStatus.Created)
                 {
                     DTOObject.SetWarningInformation("只有创建后未支付的订单可以关闭.");
