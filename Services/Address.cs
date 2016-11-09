@@ -11,13 +11,14 @@ namespace Services
 {
     public class Address
     {
-        static public ReturnJasonConstruct<IList<DTO.Address>> GetAllAddress()
+        const int maxAddressCount = 6;
+        public static ReturnJasonConstruct<IList<DTO.Address>> GetAllAddress(Guid accountId)
         {
             ReturnJasonConstruct<IList<DTO.Address>> obj = new ReturnJasonConstruct<IList<DTO.Address>>();
             try
             {
                 MissFreshEntities db = new MissFreshEntities();
-                var list = db.Addresses.ToList();
+                var list = db.Addresses.Where(p=>p.accountId == accountId).ToList();
                 obj.SetDTOObject(list.ToDTOs());
                 return obj;
             }
@@ -28,7 +29,7 @@ namespace Services
             }
         }
 
-        static public ReturnJasonConstruct<DTO.Address> GetDefaultAddress(Guid accountId)
+        public static ReturnJasonConstruct<DTO.Address> GetDefaultAddress(Guid accountId)
         {
             ReturnJasonConstruct<DTO.Address> obj = new ReturnJasonConstruct<DTO.Address>();
             try
@@ -45,12 +46,20 @@ namespace Services
             }
         }
 
-        static public ReturnJasonConstruct<DTO.Address> Create(DTO.Address dto)
+        public static ReturnJasonConstruct<DTO.Address> Create(DTO.Address dto)
         {
             ReturnJasonConstruct<DTO.Address> obj = new ReturnJasonConstruct<DTO.Address>();
             try
             {
                 MissFreshEntities db = new MissFreshEntities();
+                if (db.Addresses.Count(p => p.accountId == dto.accountId) == maxAddressCount)
+                {
+                    obj.SetWarningInformation("您的地址数不能超过6个，请删除其他地址来添加地址信息");
+                    return obj;
+                }
+                if (dto.defaultAddress == true)//Need set other address to undefault
+                    StaticSetAddressUndefault(ref db, dto.accountId);
+
                 Models.Address model = dto.ToModel();
                 model.id = Guid.NewGuid();
                 db.Addresses.Add(model);
@@ -65,19 +74,20 @@ namespace Services
             return obj;
         }
 
-        static public ReturnJasonConstruct<DTO.Address> Update(DTO.Address dto)
+        public static ReturnJasonConstruct<DTO.Address> Update(DTO.Address dto)
         {
             ReturnJasonConstruct<DTO.Address> obj = new ReturnJasonConstruct<DTO.Address>();
             try
             {
                 MissFreshEntities db = new MissFreshEntities();
+                if (dto.defaultAddress == true)//Need set other address to undefault
+                    StaticSetAddressUndefault(ref db, dto.accountId);
+
                 var model = db.Addresses.Single(p => p.id == dto.id);
-                model.area = dto.area;
-                model.building = dto.building;
-                model.floor = dto.floor;
-                model.number = dto.number;
+                model.Address1 = dto.Address1;
                 model.tel = dto.tel;
                 model.name = dto.name;
+                model.defaultAddress = dto.defaultAddress;
                 db.SaveChanges();
 
                 obj.SetDTOObject(model.ToDTO());
@@ -90,7 +100,7 @@ namespace Services
             return obj;
         }
 
-        static public ReturnJasonConstruct<bool> Delete(Guid id)
+        public static ReturnJasonConstruct<bool> Delete(Guid id)
         {
             ReturnJasonConstruct<bool> obj = new ReturnJasonConstruct<bool>();
             try
@@ -107,6 +117,15 @@ namespace Services
                 return obj;
             }
             return obj;
+        }
+
+        private static void StaticSetAddressUndefault(ref MissFreshEntities db, Guid userId)
+        {
+            var addressList = db.Addresses.Where(p => p.accountId == userId).ToList();
+            foreach (var item in addressList)
+            {
+                item.defaultAddress = false;
+            }
         }
     }
 }

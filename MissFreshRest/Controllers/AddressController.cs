@@ -13,10 +13,10 @@ namespace MissFreshRest.Controllers
     public class AddressController : ApiController
     {
         [HttpGet]
-        [Route("Address")]
-        public ReturnJasonConstruct<IList<DTO.Address>> Get()
+        [Route("Addresses/{id}")]
+        public ReturnJasonConstruct<IList<DTO.Address>> GetAll(Guid id)
         {
-            return Services.Address.GetAllAddress();
+            return Services.Address.GetAllAddress(id);
         }
 
         [HttpGet]
@@ -42,7 +42,7 @@ namespace MissFreshRest.Controllers
 
         [HttpDelete]
         [Route("Address")]
-        public ReturnJasonConstruct<bool> delete([FromBody]Guid id)
+        public ReturnJasonConstruct<bool> delete(Guid id)
         {
             return Services.Address.Delete(id);
         }

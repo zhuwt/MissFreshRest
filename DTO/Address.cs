@@ -10,12 +10,9 @@ namespace DTO
     {
         public System.Guid id { get; set; }
         public System.Guid accountId { get; set; }
+        public string Address1 { get; set; }
         public string tel { get; set; }
         public string name { get; set; }
         public Nullable<bool> defaultAddress { get; set; }
-        public string area { get; set; }
-        public string building { get; set; }
-        public int floor { get; set; }
-        public int number { get; set; }
     }
 }
