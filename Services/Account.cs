@@ -69,13 +69,20 @@ namespace Services
         /// <param name="telNo"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        static public bool Exist(string telNo,string password)
+        static public ReturnJasonConstruct<Guid> GetAccountId(string telNo, string password)
         {
+            ReturnJasonConstruct<Guid> obj = new ReturnJasonConstruct<Guid>();
             try
             {
                 MissFreshEntities db = new MissFreshEntities();
-                var count = db.Customers.Count(p => p.telNo == telNo && p.password == password);
-                return count > 0;
+                var model = db.Accounts.SingleOrDefault(p => p.Customer.telNo == telNo && p.Customer.password == password);
+                if (model == null)
+                {
+                    obj.SetWarningInformation("无法找到对应的用户.");
+                    return obj;
+                }
+                obj.SetDTOObject(model.id);
+                return obj;
             }
             catch(Exception ex)
             {

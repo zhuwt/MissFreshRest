@@ -14,6 +14,15 @@
           <Property Name="code" Type="nvarchar" MaxLength="6" />
           <Property Name="codeTime" Type="datetime" />
         </EntityType>
+        <EntityType Name="AddressConfigs">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="parentId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Content" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="layer" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Addresses">
           <Key>
             <PropertyRef Name="id" />
@@ -25,7 +34,7 @@
           <Property Name="name" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="defaultAddress" Type="bit" />
         </EntityType>
-        <EntityType Name="Category">
+        <EntityType Name="Categorys">
           <Key>
             <PropertyRef Name="id" />
           </Key>
@@ -64,7 +73,7 @@
           <Property Name="evaluate" Type="tinyint" />
           <Property Name="createTime" Type="datetime" Nullable="false" />
         </EntityType>
-        <EntityType Name="GoodsDetail">
+        <EntityType Name="GoodsDetails">
           <Key>
             <PropertyRef Name="id" />
           </Key>
@@ -85,7 +94,7 @@
           <Property Name="evaluate" Type="tinyint" />
           <Property Name="createTime" Type="datetime" Nullable="false" />
         </EntityType>
-        <EntityType Name="MealsDetail">
+        <EntityType Name="MealsDetails">
           <Key>
             <PropertyRef Name="id" />
           </Key>
@@ -93,7 +102,7 @@
           <Property Name="mealsId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="goodsId" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
-        <EntityType Name="MealsOrderDetail">
+        <EntityType Name="MealsOrderDetails">
           <Key>
             <PropertyRef Name="id" />
           </Key>
@@ -120,7 +129,7 @@
           <Property Name="imangeName" Type="nvarchar" MaxLength="256" Nullable="false" />
           <Property Name="createTime" Type="datetime" Nullable="false" />
         </EntityType>
-        <EntityType Name="OrderDetail">
+        <EntityType Name="OrderDetails">
           <Key>
             <PropertyRef Name="id" />
           </Key>
@@ -190,10 +199,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Goods_Classification">
-          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="Categorys" Type="Self.Categorys" Multiplicity="1" />
           <End Role="Goods" Type="Self.Goods" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Category">
+            <Principal Role="Categorys">
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="Goods">
@@ -202,10 +211,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Goods_GoodsDetail">
-          <End Role="GoodsDetail" Type="Self.GoodsDetail" Multiplicity="1" />
+          <End Role="GoodsDetails" Type="Self.GoodsDetails" Multiplicity="1" />
           <End Role="Goods" Type="Self.Goods" Multiplicity="0..1" />
           <ReferentialConstraint>
-            <Principal Role="GoodsDetail">
+            <Principal Role="GoodsDetails">
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="Goods">
@@ -227,48 +236,48 @@
         </Association>
         <Association Name="FK_MealsDetail_Goods">
           <End Role="Goods" Type="Self.Goods" Multiplicity="1" />
-          <End Role="MealsDetail" Type="Self.MealsDetail" Multiplicity="*" />
+          <End Role="MealsDetails" Type="Self.MealsDetails" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Goods">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="MealsDetail">
+            <Dependent Role="MealsDetails">
               <PropertyRef Name="goodsId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_MealsDetail_Meals">
           <End Role="Meals" Type="Self.Meals" Multiplicity="1" />
-          <End Role="MealsDetail" Type="Self.MealsDetail" Multiplicity="*" />
+          <End Role="MealsDetails" Type="Self.MealsDetails" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Meals">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="MealsDetail">
+            <Dependent Role="MealsDetails">
               <PropertyRef Name="mealsId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_MealsOrderDetail_Meals">
           <End Role="Meals" Type="Self.Meals" Multiplicity="1" />
-          <End Role="MealsOrderDetail" Type="Self.MealsOrderDetail" Multiplicity="*" />
+          <End Role="MealsOrderDetails" Type="Self.MealsOrderDetails" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Meals">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="MealsOrderDetail">
+            <Dependent Role="MealsOrderDetails">
               <PropertyRef Name="mealsId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_MealsOrderDetail_MealsOrders">
           <End Role="MealsOrders" Type="Self.MealsOrders" Multiplicity="1" />
-          <End Role="MealsOrderDetail" Type="Self.MealsOrderDetail" Multiplicity="*" />
+          <End Role="MealsOrderDetails" Type="Self.MealsOrderDetails" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="MealsOrders">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="MealsOrderDetail">
+            <Dependent Role="MealsOrderDetails">
               <PropertyRef Name="mealsOrderId" />
             </Dependent>
           </ReferentialConstraint>
@@ -299,40 +308,41 @@
         </Association>
         <Association Name="FK_OrderDetail_Goods1">
           <End Role="Goods" Type="Self.Goods" Multiplicity="1" />
-          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+          <End Role="OrderDetails" Type="Self.OrderDetails" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Goods">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="OrderDetail">
+            <Dependent Role="OrderDetails">
               <PropertyRef Name="goodsId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_OrderDetail_order">
           <End Role="Orders" Type="Self.Orders" Multiplicity="1" />
-          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+          <End Role="OrderDetails" Type="Self.OrderDetails" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Orders">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="OrderDetail">
+            <Dependent Role="OrderDetails">
               <PropertyRef Name="orderId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="MissFreshModelStoreContainer">
           <EntitySet Name="Accounts" EntityType="Self.Accounts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AddressConfigs" EntityType="Self.AddressConfigs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Addresses" EntityType="Self.Addresses" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Categorys" EntityType="Self.Categorys" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Customers" EntityType="Self.Customers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Goods" EntityType="Self.Goods" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="GoodsDetail" EntityType="Self.GoodsDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GoodsDetails" EntityType="Self.GoodsDetails" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Meals" EntityType="Self.Meals" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="MealsDetail" EntityType="Self.MealsDetail" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="MealsOrderDetail" EntityType="Self.MealsOrderDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MealsDetails" EntityType="Self.MealsDetails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MealsOrderDetails" EntityType="Self.MealsOrderDetails" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MealsOrders" EntityType="Self.MealsOrders" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="OrderDetail" EntityType="Self.OrderDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrderDetails" EntityType="Self.OrderDetails" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Units" EntityType="Self.Units" Schema="dbo" store:Type="Tables" />
@@ -345,11 +355,11 @@
             <End Role="Addresses" EntitySet="Addresses" />
           </AssociationSet>
           <AssociationSet Name="FK_Goods_Classification" Association="Self.FK_Goods_Classification">
-            <End Role="Category" EntitySet="Category" />
+            <End Role="Categorys" EntitySet="Categorys" />
             <End Role="Goods" EntitySet="Goods" />
           </AssociationSet>
           <AssociationSet Name="FK_Goods_GoodsDetail" Association="Self.FK_Goods_GoodsDetail">
-            <End Role="GoodsDetail" EntitySet="GoodsDetail" />
+            <End Role="GoodsDetails" EntitySet="GoodsDetails" />
             <End Role="Goods" EntitySet="Goods" />
           </AssociationSet>
           <AssociationSet Name="FK_Goods_Units" Association="Self.FK_Goods_Units">
@@ -358,19 +368,19 @@
           </AssociationSet>
           <AssociationSet Name="FK_MealsDetail_Goods" Association="Self.FK_MealsDetail_Goods">
             <End Role="Goods" EntitySet="Goods" />
-            <End Role="MealsDetail" EntitySet="MealsDetail" />
+            <End Role="MealsDetails" EntitySet="MealsDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_MealsDetail_Meals" Association="Self.FK_MealsDetail_Meals">
             <End Role="Meals" EntitySet="Meals" />
-            <End Role="MealsDetail" EntitySet="MealsDetail" />
+            <End Role="MealsDetails" EntitySet="MealsDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_MealsOrderDetail_Meals" Association="Self.FK_MealsOrderDetail_Meals">
             <End Role="Meals" EntitySet="Meals" />
-            <End Role="MealsOrderDetail" EntitySet="MealsOrderDetail" />
+            <End Role="MealsOrderDetails" EntitySet="MealsOrderDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_MealsOrderDetail_MealsOrders" Association="Self.FK_MealsOrderDetail_MealsOrders">
             <End Role="MealsOrders" EntitySet="MealsOrders" />
-            <End Role="MealsOrderDetail" EntitySet="MealsOrderDetail" />
+            <End Role="MealsOrderDetails" EntitySet="MealsOrderDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_MealsOrders_Accounts" Association="Self.FK_MealsOrders_Accounts">
             <End Role="Accounts" EntitySet="Accounts" />
@@ -382,11 +392,11 @@
           </AssociationSet>
           <AssociationSet Name="FK_OrderDetail_Goods1" Association="Self.FK_OrderDetail_Goods1">
             <End Role="Goods" EntitySet="Goods" />
-            <End Role="OrderDetail" EntitySet="OrderDetail" />
+            <End Role="OrderDetails" EntitySet="OrderDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_OrderDetail_order" Association="Self.FK_OrderDetail_order">
             <End Role="Orders" EntitySet="Orders" />
-            <End Role="OrderDetail" EntitySet="OrderDetail" />
+            <End Role="OrderDetails" EntitySet="OrderDetails" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -406,6 +416,15 @@
           <NavigationProperty Name="Addresses" Relationship="Self.FK_Address_Accounts" FromRole="Accounts" ToRole="Addresses" />
           <NavigationProperty Name="MealsOrders" Relationship="Self.FK_MealsOrders_Accounts" FromRole="Accounts" ToRole="MealsOrders" />
           <NavigationProperty Name="Orders" Relationship="Self.FK_order_Accounts" FromRole="Accounts" ToRole="Orders" />
+        </EntityType>
+        <EntityType Name="AddressConfig">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Guid" Nullable="false" />
+          <Property Name="parentId" Type="Guid" Nullable="false" />
+          <Property Name="Content" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="layer" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Address">
           <Key>
@@ -427,7 +446,7 @@
           <Property Name="category1" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="imageName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="createTime" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Goods" Relationship="Self.FK_Goods_Classification" FromRole="Category" ToRole="Goods" />
+          <NavigationProperty Name="Goods" Relationship="Self.FK_Goods_Classification" FromRole="Categorys" ToRole="Goods" />
         </EntityType>
         <EntityType Name="Customer">
           <Key>
@@ -459,11 +478,11 @@
           <Property Name="goodsStatus" Type="Int32" Nullable="false" />
           <Property Name="evaluate" Type="Byte" />
           <Property Name="createTime" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Category1" Relationship="Self.FK_Goods_Classification" FromRole="Goods" ToRole="Category" />
-          <NavigationProperty Name="GoodsDetail" Relationship="Self.FK_Goods_GoodsDetail" FromRole="Goods" ToRole="GoodsDetail" />
+          <NavigationProperty Name="Category1" Relationship="Self.FK_Goods_Classification" FromRole="Goods" ToRole="Categorys" />
+          <NavigationProperty Name="GoodsDetail" Relationship="Self.FK_Goods_GoodsDetail" FromRole="Goods" ToRole="GoodsDetails" />
           <NavigationProperty Name="Unit1" Relationship="Self.FK_Goods_Units" FromRole="Goods" ToRole="Units" />
-          <NavigationProperty Name="MealsDetails" Relationship="Self.FK_MealsDetail_Goods" FromRole="Goods" ToRole="MealsDetail" />
-          <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetail_Goods1" FromRole="Goods" ToRole="OrderDetail" />
+          <NavigationProperty Name="MealsDetails" Relationship="Self.FK_MealsDetail_Goods" FromRole="Goods" ToRole="MealsDetails" />
+          <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetail_Goods1" FromRole="Goods" ToRole="OrderDetails" />
         </EntityType>
         <EntityType Name="GoodsDetail">
           <Key>
@@ -472,7 +491,7 @@
           <Property Name="id" Type="Guid" Nullable="false" />
           <Property Name="imageName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="introduce" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Good" Relationship="Self.FK_Goods_GoodsDetail" FromRole="GoodsDetail" ToRole="Goods" />
+          <NavigationProperty Name="Good" Relationship="Self.FK_Goods_GoodsDetail" FromRole="GoodsDetails" ToRole="Goods" />
         </EntityType>
         <EntityType Name="Meal">
           <Key>
@@ -486,8 +505,8 @@
           <Property Name="stock" Type="Int32" Nullable="false" />
           <Property Name="evaluate" Type="Byte" />
           <Property Name="createTime" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="MealsDetails" Relationship="Self.FK_MealsDetail_Meals" FromRole="Meals" ToRole="MealsDetail" />
-          <NavigationProperty Name="MealsOrderDetails" Relationship="Self.FK_MealsOrderDetail_Meals" FromRole="Meals" ToRole="MealsOrderDetail" />
+          <NavigationProperty Name="MealsDetails" Relationship="Self.FK_MealsDetail_Meals" FromRole="Meals" ToRole="MealsDetails" />
+          <NavigationProperty Name="MealsOrderDetails" Relationship="Self.FK_MealsOrderDetail_Meals" FromRole="Meals" ToRole="MealsOrderDetails" />
         </EntityType>
         <EntityType Name="MealsDetail">
           <Key>
@@ -496,8 +515,8 @@
           <Property Name="id" Type="Guid" Nullable="false" />
           <Property Name="mealsId" Type="Guid" Nullable="false" />
           <Property Name="goodsId" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="Good" Relationship="Self.FK_MealsDetail_Goods" FromRole="MealsDetail" ToRole="Goods" />
-          <NavigationProperty Name="Meal" Relationship="Self.FK_MealsDetail_Meals" FromRole="MealsDetail" ToRole="Meals" />
+          <NavigationProperty Name="Good" Relationship="Self.FK_MealsDetail_Goods" FromRole="MealsDetails" ToRole="Goods" />
+          <NavigationProperty Name="Meal" Relationship="Self.FK_MealsDetail_Meals" FromRole="MealsDetails" ToRole="Meals" />
         </EntityType>
         <EntityType Name="MealsOrderDetail">
           <Key>
@@ -509,8 +528,8 @@
           <Property Name="count" Type="Int32" Nullable="false" />
           <Property Name="price" Type="Decimal" Precision="19" Scale="2" Nullable="false" />
           <Property Name="evaluate" Type="Byte" />
-          <NavigationProperty Name="Meal" Relationship="Self.FK_MealsOrderDetail_Meals" FromRole="MealsOrderDetail" ToRole="Meals" />
-          <NavigationProperty Name="MealsOrder" Relationship="Self.FK_MealsOrderDetail_MealsOrders" FromRole="MealsOrderDetail" ToRole="MealsOrders" />
+          <NavigationProperty Name="Meal" Relationship="Self.FK_MealsOrderDetail_Meals" FromRole="MealsOrderDetails" ToRole="Meals" />
+          <NavigationProperty Name="MealsOrder" Relationship="Self.FK_MealsOrderDetail_MealsOrders" FromRole="MealsOrderDetails" ToRole="MealsOrders" />
         </EntityType>
         <EntityType Name="MealsOrder">
           <Key>
@@ -528,7 +547,7 @@
           <Property Name="imangeName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="createTime" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Account" Relationship="Self.FK_MealsOrders_Accounts" FromRole="MealsOrders" ToRole="Accounts" />
-          <NavigationProperty Name="MealsOrderDetails" Relationship="Self.FK_MealsOrderDetail_MealsOrders" FromRole="MealsOrders" ToRole="MealsOrderDetail" />
+          <NavigationProperty Name="MealsOrderDetails" Relationship="Self.FK_MealsOrderDetail_MealsOrders" FromRole="MealsOrders" ToRole="MealsOrderDetails" />
         </EntityType>
         <EntityType Name="OrderDetail">
           <Key>
@@ -540,8 +559,8 @@
           <Property Name="count" Type="Int32" Nullable="false" />
           <Property Name="price" Type="Decimal" Precision="19" Scale="2" Nullable="false" />
           <Property Name="evaluate" Type="Byte" />
-          <NavigationProperty Name="Good" Relationship="Self.FK_OrderDetail_Goods1" FromRole="OrderDetail" ToRole="Goods" />
-          <NavigationProperty Name="Order" Relationship="Self.FK_OrderDetail_order" FromRole="OrderDetail" ToRole="Orders" />
+          <NavigationProperty Name="Good" Relationship="Self.FK_OrderDetail_Goods1" FromRole="OrderDetails" ToRole="Goods" />
+          <NavigationProperty Name="Order" Relationship="Self.FK_OrderDetail_order" FromRole="OrderDetails" ToRole="Orders" />
         </EntityType>
         <EntityType Name="Order">
           <Key>
@@ -559,7 +578,7 @@
           <Property Name="imangeName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="createTime" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Account" Relationship="Self.FK_order_Accounts" FromRole="Orders" ToRole="Accounts" />
-          <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetail_order" FromRole="Orders" ToRole="OrderDetail" />
+          <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetail_order" FromRole="Orders" ToRole="OrderDetails" />
         </EntityType>
         <EntityType Name="sysdiagram">
           <Key>
@@ -629,10 +648,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Goods_Classification">
-          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="Categorys" Type="Self.Category" Multiplicity="1" />
           <End Role="Goods" Type="Self.Good" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Category">
+            <Principal Role="Categorys">
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="Goods">
@@ -641,10 +660,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Goods_GoodsDetail">
-          <End Role="GoodsDetail" Type="Self.GoodsDetail" Multiplicity="1" />
+          <End Role="GoodsDetails" Type="Self.GoodsDetail" Multiplicity="1" />
           <End Role="Goods" Type="Self.Good" Multiplicity="0..1" />
           <ReferentialConstraint>
-            <Principal Role="GoodsDetail">
+            <Principal Role="GoodsDetails">
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="Goods">
@@ -666,80 +685,81 @@
         </Association>
         <Association Name="FK_MealsDetail_Goods">
           <End Role="Goods" Type="Self.Good" Multiplicity="1" />
-          <End Role="MealsDetail" Type="Self.MealsDetail" Multiplicity="*" />
+          <End Role="MealsDetails" Type="Self.MealsDetail" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Goods">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="MealsDetail">
+            <Dependent Role="MealsDetails">
               <PropertyRef Name="goodsId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_OrderDetail_Goods1">
           <End Role="Goods" Type="Self.Good" Multiplicity="1" />
-          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+          <End Role="OrderDetails" Type="Self.OrderDetail" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Goods">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="OrderDetail">
+            <Dependent Role="OrderDetails">
               <PropertyRef Name="goodsId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_MealsDetail_Meals">
           <End Role="Meals" Type="Self.Meal" Multiplicity="1" />
-          <End Role="MealsDetail" Type="Self.MealsDetail" Multiplicity="*" />
+          <End Role="MealsDetails" Type="Self.MealsDetail" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Meals">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="MealsDetail">
+            <Dependent Role="MealsDetails">
               <PropertyRef Name="mealsId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_MealsOrderDetail_Meals">
           <End Role="Meals" Type="Self.Meal" Multiplicity="1" />
-          <End Role="MealsOrderDetail" Type="Self.MealsOrderDetail" Multiplicity="*" />
+          <End Role="MealsOrderDetails" Type="Self.MealsOrderDetail" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Meals">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="MealsOrderDetail">
+            <Dependent Role="MealsOrderDetails">
               <PropertyRef Name="mealsId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_MealsOrderDetail_MealsOrders">
           <End Role="MealsOrders" Type="Self.MealsOrder" Multiplicity="1" />
-          <End Role="MealsOrderDetail" Type="Self.MealsOrderDetail" Multiplicity="*" />
+          <End Role="MealsOrderDetails" Type="Self.MealsOrderDetail" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="MealsOrders">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="MealsOrderDetail">
+            <Dependent Role="MealsOrderDetails">
               <PropertyRef Name="mealsOrderId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_OrderDetail_order">
           <End Role="Orders" Type="Self.Order" Multiplicity="1" />
-          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+          <End Role="OrderDetails" Type="Self.OrderDetail" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Orders">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="OrderDetail">
+            <Dependent Role="OrderDetails">
               <PropertyRef Name="orderId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="MissFreshEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Accounts" EntityType="Self.Account" />
+          <EntitySet Name="AddressConfigs" EntityType="Self.AddressConfig" />
           <EntitySet Name="Addresses" EntityType="Self.Address" />
-          <EntitySet Name="Categories" EntityType="Self.Category" />
+          <EntitySet Name="Categorys" EntityType="Self.Category" />
           <EntitySet Name="Customers" EntityType="Self.Customer" />
           <EntitySet Name="Goods" EntityType="Self.Good" />
           <EntitySet Name="GoodsDetails" EntityType="Self.GoodsDetail" />
@@ -768,11 +788,11 @@
             <End Role="Orders" EntitySet="Orders" />
           </AssociationSet>
           <AssociationSet Name="FK_Goods_Classification" Association="Self.FK_Goods_Classification">
-            <End Role="Category" EntitySet="Categories" />
+            <End Role="Categorys" EntitySet="Categorys" />
             <End Role="Goods" EntitySet="Goods" />
           </AssociationSet>
           <AssociationSet Name="FK_Goods_GoodsDetail" Association="Self.FK_Goods_GoodsDetail">
-            <End Role="GoodsDetail" EntitySet="GoodsDetails" />
+            <End Role="GoodsDetails" EntitySet="GoodsDetails" />
             <End Role="Goods" EntitySet="Goods" />
           </AssociationSet>
           <AssociationSet Name="FK_Goods_Units" Association="Self.FK_Goods_Units">
@@ -781,27 +801,27 @@
           </AssociationSet>
           <AssociationSet Name="FK_MealsDetail_Goods" Association="Self.FK_MealsDetail_Goods">
             <End Role="Goods" EntitySet="Goods" />
-            <End Role="MealsDetail" EntitySet="MealsDetails" />
+            <End Role="MealsDetails" EntitySet="MealsDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_OrderDetail_Goods1" Association="Self.FK_OrderDetail_Goods1">
             <End Role="Goods" EntitySet="Goods" />
-            <End Role="OrderDetail" EntitySet="OrderDetails" />
+            <End Role="OrderDetails" EntitySet="OrderDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_MealsDetail_Meals" Association="Self.FK_MealsDetail_Meals">
             <End Role="Meals" EntitySet="Meals" />
-            <End Role="MealsDetail" EntitySet="MealsDetails" />
+            <End Role="MealsDetails" EntitySet="MealsDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_MealsOrderDetail_Meals" Association="Self.FK_MealsOrderDetail_Meals">
             <End Role="Meals" EntitySet="Meals" />
-            <End Role="MealsOrderDetail" EntitySet="MealsOrderDetails" />
+            <End Role="MealsOrderDetails" EntitySet="MealsOrderDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_MealsOrderDetail_MealsOrders" Association="Self.FK_MealsOrderDetail_MealsOrders">
             <End Role="MealsOrders" EntitySet="MealsOrders" />
-            <End Role="MealsOrderDetail" EntitySet="MealsOrderDetails" />
+            <End Role="MealsOrderDetails" EntitySet="MealsOrderDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_OrderDetail_order" Association="Self.FK_OrderDetail_order">
             <End Role="Orders" EntitySet="Orders" />
-            <End Role="OrderDetail" EntitySet="OrderDetails" />
+            <End Role="OrderDetails" EntitySet="OrderDetails" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -820,6 +840,16 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="AddressConfigs">
+            <EntityTypeMapping TypeName="MissFreshModel.AddressConfig">
+              <MappingFragment StoreEntitySet="AddressConfigs">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="parentId" ColumnName="parentId" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+                <ScalarProperty Name="layer" ColumnName="layer" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Addresses">
             <EntityTypeMapping TypeName="MissFreshModel.Address">
               <MappingFragment StoreEntitySet="Addresses">
@@ -832,9 +862,9 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Categories">
+          <EntitySetMapping Name="Categorys">
             <EntityTypeMapping TypeName="MissFreshModel.Category">
-              <MappingFragment StoreEntitySet="Category">
+              <MappingFragment StoreEntitySet="Categorys">
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="category1" ColumnName="category" />
                 <ScalarProperty Name="imageName" ColumnName="imageName" />
@@ -876,7 +906,7 @@
           </EntitySetMapping>
           <EntitySetMapping Name="GoodsDetails">
             <EntityTypeMapping TypeName="MissFreshModel.GoodsDetail">
-              <MappingFragment StoreEntitySet="GoodsDetail">
+              <MappingFragment StoreEntitySet="GoodsDetails">
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="imageName" ColumnName="imageName" />
                 <ScalarProperty Name="introduce" ColumnName="introduce" />
@@ -899,7 +929,7 @@
           </EntitySetMapping>
           <EntitySetMapping Name="MealsDetails">
             <EntityTypeMapping TypeName="MissFreshModel.MealsDetail">
-              <MappingFragment StoreEntitySet="MealsDetail">
+              <MappingFragment StoreEntitySet="MealsDetails">
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="mealsId" ColumnName="mealsId" />
                 <ScalarProperty Name="goodsId" ColumnName="goodsId" />
@@ -908,7 +938,7 @@
           </EntitySetMapping>
           <EntitySetMapping Name="MealsOrderDetails">
             <EntityTypeMapping TypeName="MissFreshModel.MealsOrderDetail">
-              <MappingFragment StoreEntitySet="MealsOrderDetail">
+              <MappingFragment StoreEntitySet="MealsOrderDetails">
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="mealsOrderId" ColumnName="mealsOrderId" />
                 <ScalarProperty Name="mealsId" ColumnName="mealsId" />
@@ -937,7 +967,7 @@
           </EntitySetMapping>
           <EntitySetMapping Name="OrderDetails">
             <EntityTypeMapping TypeName="MissFreshModel.OrderDetail">
-              <MappingFragment StoreEntitySet="OrderDetail">
+              <MappingFragment StoreEntitySet="OrderDetails">
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="orderId" ColumnName="orderId" />
                 <ScalarProperty Name="goodsId" ColumnName="goodsId" />

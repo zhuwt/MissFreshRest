@@ -366,5 +366,33 @@ namespace Parse
             return dto;
         }
         #endregion
+        #region AddressConfig
+        public static DTO.AddressConfig ToDTO(this Models.AddressConfig model)
+        {
+            return model.ParseObject<Models.AddressConfig, DTO.AddressConfig>();
+        }
+        public static Models.AddressConfig ToModel(this DTO.AddressConfig DTOObject)
+        {
+            return DTOObject.ParseObject<DTO.AddressConfig, Models.AddressConfig>();
+        }
+        public static IList<DTO.AddressConfig> ToDTOs(this IList<Models.AddressConfig> models)
+        {
+            List<DTO.AddressConfig> list = new List<DTO.AddressConfig>();
+            foreach (var item in models)
+            {
+                list.Add(item.ToDTO());
+            }
+            return list;
+        }
+        public static IList<Models.AddressConfig> ToModels(this IList<DTO.AddressConfig> DTOObjects)
+        {
+            List<Models.AddressConfig> list = new List<Models.AddressConfig>();
+            foreach (var item in DTOObjects)
+            {
+                list.Add(item.ToModel());
+            }
+            return list;
+        }
+        #endregion
     }
 }

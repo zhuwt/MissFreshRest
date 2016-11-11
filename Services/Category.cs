@@ -15,7 +15,7 @@ namespace Services
             try
             {
                 MissFreshEntities db = new MissFreshEntities();
-                List<Models.Category> list = db.Categories.ToList();
+                List<Models.Category> list = db.Categorys.ToList();
                 return list.ToDTOs();
             }
             catch(Exception ex)

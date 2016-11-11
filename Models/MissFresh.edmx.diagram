@@ -4,8 +4,9 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="5768d7019785406e9efa54313898c163" Name="Diagram1">
+      <Diagram DiagramId="6b515f3cdf94495090917e9a4b910f81" Name="Diagram1">
         <EntityTypeShape EntityType="MissFreshModel.Account" Width="1.5" PointX="0.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MissFreshModel.AddressConfig" Width="1.5" PointX="5.75" PointY="7" IsExpanded="true" />
         <EntityTypeShape EntityType="MissFreshModel.Address" Width="1.5" PointX="3" PointY="22.75" IsExpanded="true" />
         <EntityTypeShape EntityType="MissFreshModel.Category" Width="1.5" PointX="0.75" PointY="4" IsExpanded="true" />
         <EntityTypeShape EntityType="MissFreshModel.Customer" Width="1.5" PointX="1.5" PointY="14.75" IsExpanded="true" />
@@ -17,7 +18,7 @@
         <EntityTypeShape EntityType="MissFreshModel.MealsOrder" Width="1.5" PointX="3" PointY="25.875" IsExpanded="true" />
         <EntityTypeShape EntityType="MissFreshModel.OrderDetail" Width="1.5" PointX="5.25" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="MissFreshModel.Order" Width="1.5" PointX="3" PointY="10.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="MissFreshModel.sysdiagram" Width="1.5" PointX="5.75" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="MissFreshModel.sysdiagram" Width="1.5" PointX="7.75" PointY="2" IsExpanded="true" />
         <EntityTypeShape EntityType="MissFreshModel.Unit" Width="1.5" PointX="0.75" PointY="7.375" IsExpanded="true" />
         <AssociationConnector Association="MissFreshModel.FK_Accounts_Customers" ManuallyRouted="false" />
         <AssociationConnector Association="MissFreshModel.FK_Address_Accounts" ManuallyRouted="false" />

@@ -57,6 +57,9 @@
     <Compile Include="Address.cs">
       <DependentUpon>MissFresh.tt</DependentUpon>
     </Compile>
+    <Compile Include="AddressConfig.cs">
+      <DependentUpon>MissFresh.tt</DependentUpon>
+    </Compile>
     <Compile Include="Category.cs">
       <DependentUpon>MissFresh.tt</DependentUpon>
     </Compile>

@@ -26,8 +26,9 @@ namespace Models
         }
     
         public virtual DbSet<Account> Accounts { get; set; }
+        public virtual DbSet<AddressConfig> AddressConfigs { get; set; }
         public virtual DbSet<Address> Addresses { get; set; }
-        public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Category> Categorys { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<Good> Goods { get; set; }
         public virtual DbSet<GoodsDetail> GoodsDetails { get; set; }

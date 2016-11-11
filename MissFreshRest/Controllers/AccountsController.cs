@@ -39,11 +39,18 @@ namespace MissFreshRest.Controllers
             }
         }
 
+        //[HttpGet]
+        //[Route("account\exist")]
+        //public bool Get(string telNo)
+        //{
+        //    return Services.Account.Exist(telNo);
+        //}
+
         [HttpGet]
         [Route("account")]
-        public bool Get(string telNo,string password)
+        public ReturnJasonConstruct<Guid> Get(string telNo, string password)
         {
-            return Services.Account.Exist(telNo, password);
+            return Services.Account.GetAccountId(telNo, password);
         }
 
         [HttpPut]
