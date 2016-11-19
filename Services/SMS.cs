@@ -18,7 +18,7 @@ namespace Services
         {
             return GetRandomCode();
             int code = GetRandomCode();
-            string param = string.Format("{name:'小鲜来了',number:'{0}'}", code);
+            string param = string.Format("{number:'{0}'}", code);
             //string param = @"{name:'小鲜来了',number:'4575'}";
             ITopClient client = new DefaultTopClient("https://eco.taobao.com/router/rest", "23482739", "3c5568a65d3b8ff55c68a9cbc42ab898");
             AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();

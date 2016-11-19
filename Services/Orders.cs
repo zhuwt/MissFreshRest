@@ -27,13 +27,13 @@ namespace Services
 
     public class Orders
     {
-        public static ReturnJasonConstruct<IList<DTO.Order>> GetAllOrders()
+        public static ReturnJasonConstruct<IList<DTO.Order>> GetAllOrders(Guid id)
         {
             ReturnJasonConstruct<IList<DTO.Order>> list = new ReturnJasonConstruct<IList<DTO.Order>>();
             try
             {
                 MissFreshEntities db = new MissFreshEntities();
-                var orderList = db.Orders.ToList();
+                var orderList = db.Orders.Where(p=>p.accountId == id).ToList();
                 list.SetDTOObject(orderList.ToDTOs());
                 return list;
             }

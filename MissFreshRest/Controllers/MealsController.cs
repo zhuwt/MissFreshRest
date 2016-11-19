@@ -13,7 +13,7 @@ namespace MissFreshRest.Controllers
     public class MealsController : ApiController
     {
         [HttpGet]
-        [Route("meals")]
+        [Route("meals/")]
         public ReturnJasonConstruct<IList<DTO.Meals>> Get()
         {
             return Services.Meals.GetAllMeals();

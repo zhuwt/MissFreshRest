@@ -13,15 +13,15 @@ namespace MissFreshRest.Controllers
     public class OrdersController : ApiController
     {
         [HttpGet]
-        [Route("orders")]
-        public ReturnJasonConstruct<IList<DTO.Order>> Get()
+        [Route("ordersList/{accountId}")]
+        public ReturnJasonConstruct<IList<DTO.Order>> GetOrderList(Guid accountId)
         {
-            return Services.Orders.GetAllOrders();
+            return Services.Orders.GetAllOrders(accountId);
         }
 
         [HttpGet]
         [Route("orders/{id}")]
-        public ReturnJasonConstruct<DTO.Order> Get(Guid id)
+        public ReturnJasonConstruct<DTO.Order> GetEntireOrder(Guid id)
         {
             return Services.Orders.GetEntireOrderInformation(id);
         }
