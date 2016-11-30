@@ -9,11 +9,11 @@ using Parse;
 
 namespace Services
 {
-    public enum orderType
-    {
-        goods = 0,      //create
-        meals = 1       //payed
-    }
+    //public enum orderType
+    //{
+    //    goods = 0,      //create
+    //    meals = 1       //payed
+    //}
 
     public enum orderStatus
     {

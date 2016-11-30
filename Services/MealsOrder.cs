@@ -72,9 +72,9 @@ namespace Services
                 model.imangeName = mealsObj.imangeName;
                 foreach (var item in model.MealsOrderDetails)
                 {
-                    var goodsInfo = db.Goods.Single(p => p.id == item.mealsId);
-                    goodsInfo.stock -= item.count;
-                    if (goodsInfo.stock < 0)
+                    var mealsInfo = db.Meals.Single(p => p.id == item.mealsId);
+                    mealsInfo.stock -= item.count;
+                    if (mealsInfo.stock < 0)
                     {
                         DTOObject.SetWarningInformation("很抱歉，所选菜品中库存不足.");
                         return DTOObject;
