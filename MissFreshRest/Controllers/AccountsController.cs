@@ -14,14 +14,22 @@ namespace MissFreshRest.Controllers
     public class AccountsController : ApiController
     {
         [HttpGet]
-        [Route("account/Check")]
+        [Route("account/Check/{telNo}")]
         public ReturnJasonConstruct<DTO.Account> Get(string telNo)
         {
             DTO.Account ac = new DTO.Account();
             ReturnJasonConstruct<DTO.Account> obj = new ReturnJasonConstruct<DTO.Account>();
             if (Services.Account.CanSendCheckCode(telNo))
             {
-                int code = SMS.SendMessage(telNo);
+                bool result;
+                int code = SMS.SendMessage(telNo,out result);
+                if (result == false)
+                {
+                    obj.status = (int)executeStatus.warning;
+                    obj.information = "发送短信错误，远端服务器错误，请联系客户服务人员.";
+                    return obj;
+                }
+
                 Console.WriteLine("******Code is:" + code.ToString());
                 if (!Services.Account.Exist(telNo))
                     return Services.Account.Create(telNo, code);
