@@ -11,13 +11,13 @@ namespace Services
 {
     public class MealsOrder
     {
-        public static ReturnJasonConstruct<IList<DTO.MealsOrder>> GetAllOrder()
+        public static ReturnJasonConstruct<IList<DTO.MealsOrder>> GetAllOrder(Guid id)
         {
             ReturnJasonConstruct<IList<DTO.MealsOrder>> list = new ReturnJasonConstruct<IList<DTO.MealsOrder>>();
             try
             {
                 MissFreshEntities db = new MissFreshEntities();
-                var orderList = db.MealsOrders.ToList();
+                var orderList = db.MealsOrders.Where(p=>p.accountId == id).ToList();
                 list.SetDTOObject(orderList.ToDTOs());
                 return list;
             }
@@ -28,7 +28,7 @@ namespace Services
             }
         }
 
-        public static ReturnJasonConstruct<DTO.EntireMealsOrder> GetEntireOrderInformation(Guid id)
+        public static ReturnJasonConstruct<DTO.EntireMealsOrder> GetEntireOrderInformation(Guid id, Guid accId)
         {
             ReturnJasonConstruct<DTO.EntireMealsOrder> list = new ReturnJasonConstruct<DTO.EntireMealsOrder>();
             try
@@ -39,10 +39,12 @@ namespace Services
                 var temp = from r in db.MealsOrderDetails.Where(p => p.mealsOrderId == id)
                            join m in db.Meals.AsQueryable<Models.Meal>()
                            on r.mealsId equals m.id
-                           select m;
+                           select r;
                 foreach (var item in temp.ToList())
                 {
-                    dto.orderDetail.Add(item.ToDTO());
+                    var subdto = item.ToDTO();
+                    subdto.name = item.Meal.name;
+                    dto.orderDetail.Add(subdto);
                 }
                 list.SetDTOObject(dto);
                 return list;

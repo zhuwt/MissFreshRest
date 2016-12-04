@@ -18,8 +18,7 @@ namespace DTO
         public string tel { get; set; }
         public string receivePerson { get; set; }
         public string imangeName { get; set; }
-        public System.DateTime createTime { get; set; }
-
+        public System.DateTime createTime { get; set; } 
         public List<DTO.MealsOrderDetail> orderDetail { get; set; }
     }
 
@@ -28,6 +27,7 @@ namespace DTO
         public System.Guid id { get; set; }
         public System.Guid mealsOrderId { get; set; }
         public System.Guid mealsId { get; set; }
+        public string name { get; set; }
         public int count { get; set; }
         public decimal price { get; set; }
         public Nullable<byte> evaluate { get; set; }

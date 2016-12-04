@@ -18,24 +18,34 @@ namespace Services
         /// Send message to cellphone by indicate
         /// </summary>
         /// <param name="telNo">cellphone number</param>
-        /// <returns></returns>
-        static public bool CanSendCheckCode(string telNo)
+        /// <returns>   0,can send cert code;
+        ///             1:exist;
+        ///             2,wait 1 minutes;
+        /// </returns>
+        static public int CanSendCheckCode(string telNo)
         {
             try
             {
                 MissFreshEntities db = new MissFreshEntities();
-                var result = db.Accounts.AsQueryable().Where(p => p.Customer.telNo == telNo);
-                if (result == null || result.Count() == 0)
+                var result = db.Accounts.AsQueryable().Where(p => p.Customer.telNo == telNo && p.Customer.password != null).SingleOrDefault();
+                if (result != null)
                 {
-                    return true;
+                    return 1;
                 }
                 else
                 {
-                    var obj = result.ToList()[0];
-                    if (obj.codeTime == null || (DateTime.Now - obj.codeTime).Value.Minutes > 1)
-                        return true;
+                    result = db.Accounts.AsQueryable().Where(p => p.Customer.telNo == telNo && p.Customer.password == null).SingleOrDefault();
+                    if (result == null)
+                    {
+                        return 0;
+                    }
                     else
-                        return false;//This branch means user send SMS interval less than 1min.
+                    {
+                        if (result.codeTime == null || (DateTime.Now - result.codeTime).Value.Minutes > 1)
+                            return 0;
+                        else
+                            return 2;//This branch means user send SMS interval less than 1min.
+                    }
                 }
             }
             catch (Exception ex)
@@ -169,14 +179,15 @@ namespace Services
             {
                 Models.Account acc = account.ToModel();
                 MissFreshEntities db = new MissFreshEntities();
-                var model = db.Accounts.SingleOrDefault(p =>p.Customer.telNo == acc.Customer.telNo);
+                var model = db.Accounts.SingleOrDefault(p =>p.Customer.telNo == acc.Customer.telNo && p.Customer.password == null);
                 if (model == null)
                 {
-                    obj.SetWarningInformation("查找用户失败.");
+                    obj.SetWarningInformation("用于已存在！请检查手机号输入是否正确.");
                     return obj;
                 }
                 else
                 {
+                    
                     if (model.code == acc.code)
                     {
                         model.code = SMS.GetRandomCode().ToString();

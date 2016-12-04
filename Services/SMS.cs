@@ -19,8 +19,8 @@ namespace Services
         static string secret = "3c5568a65d3b8ff55c68a9cbc42ab898";
         public static int SendMessage(string telNo, out bool result)
         {
-            result = true;
-            return GetRandomCode();
+            //result = true;
+            //return GetRandomCode();
             int code = GetRandomCode();
             string param = string.Format(@"{{code:'{0}'}}", code);
             ITopClient client = new DefaultTopClient("https://eco.taobao.com/router/rest", SMS.appKey, SMS.secret);
@@ -32,7 +32,7 @@ namespace Services
             req.RecNum = telNo;
             req.SmsTemplateCode = "SMS_25676012";
             AlibabaAliqinFcSmsNumSendResponse rsp = client.Execute(req);
-            result = rsp.Result.Success;
+            result = !rsp.IsError;
             Console.WriteLine(rsp.Body);
             return code;
         }

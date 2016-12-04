@@ -20,6 +20,6 @@ namespace DTO
         public string imangeName { get; set; }
         public System.DateTime createTime { get; set; }
 
-        public List<DTO.Meals> orderDetail { get; set; }
+        public List<DTO.MealsOrderDetail> orderDetail { get; set; }
     }
 }

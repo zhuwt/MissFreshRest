@@ -12,6 +12,8 @@ namespace DTO
         public string name { get; set; }
         public string imangeName { get; set; }
         public decimal totalPrice { get; set; }
+
+        public int count;
         public Nullable<byte> evaluate { get; set; }
         public IEnumerable<DTO.Goods> goodsList { get; set; }
     }

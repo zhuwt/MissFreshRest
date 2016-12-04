@@ -362,7 +362,7 @@ namespace Parse
         {
             Mapper.Initialize(p => p.CreateMap<Models.MealsOrder, DTO.EntireMealsOrder>());
             var dto = Mapper.Map<DTO.EntireMealsOrder>(model);
-            dto.orderDetail = new List<DTO.Meals>();
+            dto.orderDetail = new List<DTO.MealsOrderDetail>();
             return dto;
         }
         #endregion

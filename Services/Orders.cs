@@ -52,6 +52,10 @@ namespace Services
                 MissFreshEntities db = new MissFreshEntities();
                 var order = db.Orders.SingleOrDefault(p => p.id == id);
                 list.SetDTOObject(order.ToDTO());
+                foreach (var item in list.DTOObject.orderDetailList)
+                {
+                    item.name = db.Goods.Single(p=>p.id == item.goodsId).name;
+                }
                 return list;
             }
             catch (Exception ex)

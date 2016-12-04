@@ -26,6 +26,7 @@ namespace DTO
     {
         public System.Guid id { get; set; }
         public System.Guid goodsId { get; set; }
+        public string name { get; set; }
         public int count { get; set; }
         public decimal price { get; set; }
         public Nullable<byte> evaluate { get; set; }

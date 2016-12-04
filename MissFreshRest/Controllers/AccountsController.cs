@@ -19,31 +19,45 @@ namespace MissFreshRest.Controllers
         {
             DTO.Account ac = new DTO.Account();
             ReturnJasonConstruct<DTO.Account> obj = new ReturnJasonConstruct<DTO.Account>();
-            if (Services.Account.CanSendCheckCode(telNo))
+            switch (Services.Account.CanSendCheckCode(telNo))
             {
-                bool result;
-                int code = SMS.SendMessage(telNo,out result);
-                if (result == false)
-                {
-                    obj.status = (int)executeStatus.warning;
-                    obj.information = "发送短信错误，远端服务器错误，请联系客户服务人员.";
-                    return obj;
-                }
-
-                Console.WriteLine("******Code is:" + code.ToString());
-                if (!Services.Account.Exist(telNo))
-                    return Services.Account.Create(telNo, code);
-                else
-                {
-                    return Services.Account.Update(telNo, code);
-                }
-            }
-            else
-            {
-                obj.status = (int)executeStatus.warning;
-                obj.information = "验证码每一分钟只能发送一次，请稍后再试.";
-                return obj;
-                //account exist cannot send check code，please change to another telephone number.
+                case 0:
+                    {
+                        bool result;
+                        int code = SMS.SendMessage(telNo, out result);
+                        if (result == false)
+                        {
+                            obj.status = (int)executeStatus.warning;
+                            obj.information = "请勿频繁发送短信，请稍后再次尝试.";
+                            return obj;
+                        }
+                        Console.WriteLine("******Code is:" + code.ToString());
+                        if (!Services.Account.Exist(telNo))
+                            return Services.Account.Create(telNo, code);
+                        else
+                        {
+                            return Services.Account.Update(telNo, code);
+                        }
+                    }
+                case 1:
+                    {
+                        //account exist cannot send check code，please change to another telephone number.
+                        obj.status = (int)executeStatus.warning;
+                        obj.information = "账户已经存在,请确认手机号填写是否正确.";
+                        return obj;
+                    }
+                case 2:
+                    {
+                        obj.status = (int)executeStatus.warning;
+                        obj.information = "验证码每一分钟只能发送一次，请稍后再试.";
+                        return obj;
+                    }
+                default:
+                    {
+                        obj.status = (int)executeStatus.warning;
+                        obj.information = "获取验证码出现未知错误，请联系客服.";
+                        return obj;
+                    }
             }
         }
 
