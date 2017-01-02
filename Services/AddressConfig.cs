@@ -11,21 +11,39 @@ namespace Services
 {
     public enum layer
     {
-        zone = 0
-        , building = 1
-        , floor = 2
-        , number = 3
+        cityZone = 0
+        , zone = 1
+        , building = 2
+        , floor = 3
+        , number = 4
     }
 
     public class AddressConfig
     {
-        public static ReturnJasonConstruct<IList<DTO.AddressConfig>> GetAllZone()
+        public static ReturnJasonConstruct<IList<DTO.AddressConfig>> GetAllCityZone()
         {
             ReturnJasonConstruct<IList<DTO.AddressConfig>> obj = new ReturnJasonConstruct<IList<DTO.AddressConfig>>();
             try
             {
                 MissFreshEntities db = new MissFreshEntities();
-                var list = db.AddressConfigs.Where(p => p.layer == ((int)layer.zone)).ToList();
+                var list = db.AddressConfigs.Where(p => p.layer == ((int)layer.cityZone)).ToList();
+                obj.SetDTOObject(list.ToDTOs());
+                return obj;
+            }
+            catch (Exception ex)
+            {
+                obj.SetFailedInformation(ex.Message, null);
+                return obj;
+            }
+        }
+
+        public static ReturnJasonConstruct<IList<DTO.AddressConfig>> GetAllZone(Guid parentId)
+        {
+            ReturnJasonConstruct<IList<DTO.AddressConfig>> obj = new ReturnJasonConstruct<IList<DTO.AddressConfig>>();
+            try
+            {
+                MissFreshEntities db = new MissFreshEntities();
+                var list = db.AddressConfigs.Where(p => p.layer == ((int)layer.zone) && p.parentId == parentId).ToList();
                 obj.SetDTOObject(list.ToDTOs());
                 return obj;
             }

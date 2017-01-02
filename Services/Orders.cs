@@ -46,18 +46,9 @@ namespace Services
                 str = string.Format(str, id);
                 DataTable dt = ExecuteSql(db.Database.Connection.ConnectionString, str);
                 List<DTO.Order> ls = new List<DTO.Order>();
-                Guid orderId = new Guid();
-                DTO.Order obj = null;
-                //for (int n = 0; n < dt.Rows.Count; n++)
-                //{
-                //    var item = dt.Rows[n];
-                //    if (orderId != (Guid)item["orderId"])
-                //    {
-                //        obj = new DTO.Order();
-                //        ls.Add(obj);
 
-                //    }
-                //}
+                DTO.Order obj = null;
+                Guid orderId = default(Guid);
                 foreach (DataRow item in dt.Rows)
                 {
                     if (orderId != (Guid)item["orderId"])

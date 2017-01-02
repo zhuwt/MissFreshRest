@@ -30,10 +30,6 @@ namespace MissFreshRest.Controllers
         [Route("mealsOrders/")]
         public ReturnJasonConstruct<DTO.MealsOrder> Post([FromBody]DTO.MealsOrder order)
         {
-            order.createTime = DateTime.Now;
-            order.id = Guid.NewGuid();
-            var temp = string.Format("{0:0000}{1:00}{2:00}{3:00}{4:00}{5:00}{6:000}", order.createTime.Year, order.createTime.Month, order.createTime.Day, order.createTime.Hour, order.createTime.Minute, order.createTime.Second, order.createTime.Millisecond);////, , , , 
-            order.orderNo = long.Parse(temp);
             foreach (var item in order.orderDetail)
             {
                 item.id = Guid.NewGuid();

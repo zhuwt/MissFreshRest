@@ -13,10 +13,17 @@ namespace MissFreshRest.Controllers
     public class AddressConfigsController : ApiController
     {
         [HttpGet]
-        [Route("AddressConfigs/zones")]
-        public ReturnJasonConstruct<IList<DTO.AddressConfig>> GetZones()
+        [Route("AddressConfigs/cityzones")]
+        public ReturnJasonConstruct<IList<DTO.AddressConfig>> GetCityZones()
         {
-            return Services.AddressConfig.GetAllZone();
+            return Services.AddressConfig.GetAllCityZone();
+        }
+
+        [HttpGet]
+        [Route("AddressConfigs/zones/{parentId}")]
+        public ReturnJasonConstruct<IList<DTO.AddressConfig>> GetZones(Guid parentId)
+        {
+            return Services.AddressConfig.GetAllZone(parentId);
         }
 
         [HttpGet]
